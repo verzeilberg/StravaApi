@@ -1,12 +1,10 @@
 <?php
-namespace ZendSkeletonModule;
-
-use Zend\ServiceManager\Factory\InvokableFactory;
+namespace StravaApi;
 
 return [
     'controllers' => [
         'factories' => [
-            Controller\SkeletonController::class => InvokableFactory::class,
+            Controller\StravaApiController::class => Controller\Factory\IndexControllerFactory::class,
         ],
     ],
     'router' => [
@@ -17,7 +15,7 @@ return [
                     // Change this to something specific to your module
                     'route'    => '/module-specific-root',
                     'defaults' => [
-                        'controller'    => Controller\SkeletonController::class,
+                        'controller'    => Controller\StravaApiController::class,
                         'action'        => 'index',
                     ],
                 ],
@@ -31,7 +29,7 @@ return [
     ],
     'view_manager' => [
         'template_path_stack' => [
-            'ZendSkeletonModule' => __DIR__ . '/../view',
+            __DIR__ . '/../view',
         ],
     ],
 ];
