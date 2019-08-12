@@ -1,35 +1,108 @@
 <?php
 namespace StravaApi;
 
+use Zend\Router\Http\Literal;
+use Zend\Router\Http\Segment;
+use Zend\ServiceManager\Factory\InvokableFactory;
+use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
+
 return [
     'controllers' => [
         'factories' => [
-            Controller\StravaApiController::class => Controller\Factory\IndexControllerFactory::class,
+            Controller\StravaController::class => Controller\Factory\StravaControllerFactory::class,
+            Controller\StravaImportController::class => Controller\Factory\StravaImportControllerFactory::class,
+        ],
+        'aliases' => [
+            'stravabeheer' => Controller\StravaController::class,
+            'stravaimportbeheer' => Controller\StravaImportController::class
+        ],
+    ],
+    'service_manager' => [
+        'invokables' => [
+            Service\StravaOAuthServiceInterface::class => Service\StravaOAuthService::class,
+            Service\StravaServiceInterface::class => Service\StravaService::class,
+            Service\StravaDbServiceInterface::class => Service\StravaDbService::class,
+            StravaImportLogServiceInterface::class => Service\StravaImportLogService::class,
+
         ],
     ],
     'router' => [
         'routes' => [
-            'module-name-here' => [
-                'type'    => 'Literal',
+            'strava' => [
+                'type' => 'segment',
                 'options' => [
-                    // Change this to something specific to your module
-                    'route'    => '/module-specific-root',
+                    'route' => '/strava[/:action][/:id]',
+                    'constraints' => [
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id' => '[0-9]+',
+                    ],
                     'defaults' => [
-                        'controller'    => Controller\StravaApiController::class,
-                        'action'        => 'index',
+                        'controller' => Controller\StravaController::class,
+                        'action' => 'index',
                     ],
                 ],
-                'may_terminate' => true,
-                'child_routes' => [
-                    // You can place additional routes that match under the
-                    // route defined above here.
+            ],
+            'stravaimport' => [
+                'type' => 'segment',
+                'options' => [
+                    'route' => '/stravaimport[/:action][/:id]',
+                    'constraints' => [
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id' => '[0-9]+',
+                    ],
+                    'defaults' => [
+                        'controller' => Controller\StravaImportController::class,
+                        'action' => 'index',
+                    ],
                 ],
             ],
         ],
     ],
+    // The 'access_filter' key is used by the User module to restrict or permit
+    // access to certain controller actions for unauthorized visitors.
+    'access_filter' => [
+        'controllers' => [
+            'stravabeheer' => [
+                // to anyone.
+                ['actions' => '*', 'allow' => '+strava.manage']
+            ],
+            'stravaimportbeheer' => [
+                // to anyone.
+                ['actions' => '*', 'allow' => '+strava.manage']
+            ],
+        ]
+    ],
     'view_manager' => [
         'template_path_stack' => [
-            __DIR__ . '/../view',
+            'stravaapi' => __DIR__ . '/../view',
         ],
     ],
+    'doctrine' => [
+        'driver' => [
+            __NAMESPACE__ . '_driver' => [
+                'class' => AnnotationDriver::class,
+                'cache' => 'array',
+                'paths' => [__DIR__ . '/../src/Entity']
+            ],
+            'orm_default' => [
+                'drivers' => [
+                    __NAMESPACE__ . '\Entity' => __NAMESPACE__ . '_driver'
+                ]
+            ]
+        ]
+    ],
+    'asset_manager' => [
+        'resolver_configs' => [
+            'paths' => [
+                __DIR__ . '/../public',
+            ],
+        ],
+    ],
+    'stravaSettings' => [
+        'clientId' => '',
+        'clientSecret' => '',
+        'redirectUri' => '',
+        'athleteId' => '',
+        'activitiesPerPage' => 30
+    ]
 ];

@@ -1,0 +1,60 @@
+<?php
+$this->mainMenu()->setActiveItemId('stravabeheer');
+$this->pageBreadcrumbs()->setLayout('beheer');
+$this->pageBreadcrumbs()->setItems([
+    'Beheer' => $this->url('beheer'),
+    'Strava' => $this->url('strava'),
+]);
+?>
+<!-- Page Header -->
+<div class="row">
+    <h1 class="col">STRAVA BEHEER</h1>
+</div>
+<!-- Breadcrumbs -->
+<div class="row">
+    <div class="col">
+        <?= $this->pageBreadcrumbs()->render(); ?>
+    </div>
+</div>
+<div class="row">
+    <div class="col">
+        <table class="table table-dark table-sm table-bordered table-hover table-striped">
+            <thead class="thead-dark">
+            <tr>
+                <th class="text-center"><i class="fas fa-flag-checkered"> / <i class="fas fa-dumbbell"></i></th>
+                <th>Datum</th>
+                <th>Naam</th>
+                <th>Afstand</th>
+                <th>Tijd</th>
+                <th>Hoogte</th>
+                <th class="text-center"><i class="fas fa-cogs"></i></th>
+            </tr>
+            </thead>
+            <tbody>
+            <?php foreach ($activities AS $activity) { ?>
+                <tr <?= ($activity->getType() == 1? 'class="bg-success"':''); ?>>
+                    <td class="text-center">
+                        <?= ($activity->getWorkoutType() == 1? '<i class="fas fa-flag-checkered"></i>':''); ?>
+                        <?= ($activity->getWorkoutType() == 3? '<i class="fas fa-dumbbell"></i>':''); ?>
+                    </td>
+                    <td><?= $activity->getStartDate()->format('d-m-Y'); ?></td>
+                    <td><?= $activity->getName(); ?></td>
+                    <td><?= number_format($activity->getDistance() / 1000, 2, ',', '.'); ?> km</td>
+                    <td><?= number_format($activity->getMovingTime() / 60, 2, ':', ''); ?></td>
+                    <td><?= number_format($activity->getElevHigh(), 1, ',', ''); ?></td>
+                    <td class="text-center">
+                        <a class="btn btn-sm btn-secondary" title="Edit event" href="<?= $this->url('strava', ['action' => 'detail', 'id' => $activity->getId()]); ?>">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                    </td>
+                </tr>
+            <?php } ?>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<?= $this->paginationControl($activities,
+    'Sliding',
+    'layout/paginator',
+    array('route' => 'beheer/strava', 'action' => 'activiteiten')); ?>

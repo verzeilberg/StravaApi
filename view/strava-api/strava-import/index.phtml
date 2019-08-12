@@ -1,0 +1,170 @@
+<?php
+$this->mainMenu()->setActiveItemId('stravabeheer');
+$this->pageBreadcrumbs()->setLayout('beheer');
+$this->pageBreadcrumbs()->setItems([
+    'Beheer' => $this->url('beheer'),
+    'Strava' => $this->url('strava'),
+]);
+?>
+<!-- Page Header -->
+<div class="row">
+    <h1 class="col">STRAVA BEHEER</h1>
+</div>
+<!-- Breadcrumbs -->
+<div class="row">
+    <div class="col">
+        <?= $this->pageBreadcrumbs()->render(); ?>
+    </div>
+</div>
+<div class="row mb-3">
+
+    <div class="col-md-auto">
+        <?= (!empty($authoraisationLink) ? '<a class="btn btn-dark" href="' . $authoraisationLink . '"><i class="fas fa-plug"></i></a>' : '<span id="importActivities" class="btn btn-dark"><i class="fas fa-upload"></i></span>') ?>
+    </div>
+    <div class="col-md">
+        <p>Last import date: <?= (is_object($importLog) && is_object($importLog->getImportDate())? $importLog->getImportDate()->format('d-m-Y H:i:s'):''); ?></p>
+    </div>
+</div>
+<div class="row">
+    <div class="col">
+        <table class="table table-dark table-sm table-bordered table-hover table-striped">
+            <thead class="thead-dark">
+            <tr>
+                <th class="text-center"><i class="fas fa-hashtag"></i></th>
+                <th class="text-center"><i class="fas fa-flag-checkered"> / <i class="fas fa-dumbbell"></i></th>
+                <th>Activity Id</th>
+                <th>Datum</th>
+                <th>Naam</th>
+                <th>Afstand</th>
+                <th>Tijd</th>
+                <th>Hoogte</th>
+                <th class="text-center"><i class="fas fa-cogs"></i></th>
+            </tr>
+            </thead>
+            <tbody>
+            <?php if (empty($activities)) { ?>
+                <tr>
+                    <td class="text-center" colspan="10">Er zijn geen activiteiten om te uploaden</td>
+                </tr>
+            <?php } else { ?>
+                <?php $nr = 1; ?>
+                <?php foreach ($activities AS $index => $activity) { ?>
+                    <tr id="activity-<?= $index ?>" <?= ($activity["workout_type"] == 1 ? 'class="bg-success"' : ''); ?>>
+                        <td class="text-center">
+                            <?= $nr; ?>
+                            <input type="hidden" value="<?php echo $index; ?>" name="activity"/>
+                        </td>
+                        <td class="text-center">
+                            <?= ($activity["workout_type"] == 1 ? '<i class="fas fa-flag-checkered"></i>' : ''); ?>
+                            <?= ($activity["workout_type"] == 3 ? '<i class="fas fa-dumbbell"></i>' : ''); ?>
+                        </td>
+                        <td><?= $index ?></td>
+                        <td><?= $activity["start_date"]; ?></td>
+                        <td><?= $activity["name"]; ?></td>
+                        <td><?= number_format($activity["distance"] / 1000, 2, ',', '.'); ?> km</td>
+                        <td><?= number_format($activity["moving_time"] / 60, 2, ':', ''); ?></td>
+                        <td><?= number_format($activity["total_elevation_gain"], 1, ',', ''); ?></td>
+                        <td class="text-center">
+                            <a class="btn btn-sm btn-secondary" title="Edit event"
+                               href="<?= $this->url('strava', ['action' => 'detail', 'id' => $activity["id"]]); ?>">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    <?php $nr++; ?>
+                <?php } ?>
+            <?php } ?>
+            </tbody>
+        </table>
+    </div>
+</div>
+<script>
+
+    /*
+   * Ajax function to check images with server and db
+   */
+    $("span#importActivities").on("click", function () {
+        $.ajax({
+            type: 'POST',
+            url: "/beheer/stravaimport/createimportlog",
+            async: true,
+            success: function (data) {
+                if (data.success === true) {
+                    createActivitiesArray(data.importId);
+                }
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                alert(errorThrown);
+            }
+        });
+
+
+    });
+
+    /*
+     * Create a array to process
+     *
+     * @return void
+     */
+    function createActivitiesArray(importId) {
+        var activitiesArr = [];
+        $("input[name='activity']").each(function (index) {
+
+            console.log(index);
+
+            var activityId = $(this).val();
+            //Create object
+            var activityArr = [];
+            activityArr['activityId'] = activityId;
+            activityArr['importId'] = importId;
+            //Push object into array with index
+            activitiesArr[index] = activityArr;
+        });
+
+        console.log(activitiesArr);
+
+        processActivitiesArray(activitiesArr);
+    }
+
+    /*
+     * Process the given array
+     *
+     * @return void
+     */
+    function processActivitiesArray(activitiesArr) {
+
+        if (activitiesArr.length > 0) {
+            var activityId = activitiesArr[0]['activityId'];
+            var importId = activitiesArr[0]['importId'];
+            var activitiesArr = $.grep(activitiesArr, function (e) {
+                return e.activityId != activityId;
+            });
+
+            processActivitiesArrayAjax(activitiesArr, activityId, importId);
+        }
+    }
+
+    function processActivitiesArrayAjax(activitiesArr, activityId, importId) {
+        $.ajax({
+            type: 'POST',
+            data: {
+                activityId: activityId,
+                importId: importId,
+                code: '<?= $code ?>'
+            },
+            url: "/beheer/stravaimport/addactivity",
+            async: true,
+            success: function (data) {
+                if (data.success === true) {
+                    $('tr#activity-' + data.activityId).remove();
+                } else {
+                    $('tr#activity-' + data.activityId).addClass('bg-danger');
+                }
+                processActivitiesArray(activitiesArr);
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                alert(errorThrown);
+            }
+        });
+    }
+</script>
