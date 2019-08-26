@@ -1,3 +1,9 @@
 #stravaOverview .col .card .card-header i {
     font-size:80px;
 }
+
+.medal i {
+    font-size:60px;
+    margin: 5px 0;
+    color: #7abaff;
+}

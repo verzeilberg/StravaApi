@@ -3,8 +3,6 @@ namespace StravaApi\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
 use StravaApi\Service\StravaDbService;
-use StravaApi\Service\StravaService;
-use StravaApi\Service\StravaOAuthService;
 
 class StravaController extends AbstractActionController
 {
@@ -27,12 +25,24 @@ class StravaController extends AbstractActionController
 
         $totalRunActivities = $this->stravaDbService->getTotalActivities('Run');
         $totalRunDistance = $this->stravaDbService->getTotalDistance('Run');
+        $totalRunTime = $this->stravaDbService->getTotalTime('Run');
         $averageSpeed = $this->stravaDbService->getAverageSpeed('Run');
+        $averageElevation = $this->stravaDbService->getAverageElevation('Run');
+        $averageHeartbeat = $this->stravaDbService->getAverageHeartbeat('Run');
+
+        $fastestActivity = $this->stravaDbService->getFastestActivity('Run');
+        $longestActivity = $this->stravaDbService->getLongestActivity('Run');
+
 
         return [
             'totalRunActivities' => $totalRunActivities,
             'totalRunDistance' => $totalRunDistance,
-            'averageSpeed' => $averageSpeed
+            'totalRunTime' => $totalRunTime,
+            'averageSpeed' => $averageSpeed,
+            'averageElevation' => $averageElevation,
+            'averageHeartbeat' => $averageHeartbeat,
+            'fastestActivity' => $fastestActivity,
+            'longestActivity' => $longestActivity
         ];
     }
 

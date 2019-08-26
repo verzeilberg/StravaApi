@@ -36,9 +36,10 @@ $this->pageBreadcrumbs()->setItems([
                 <th>Datum</th>
                 <th>Naam</th>
                 <th>Afstand</th>
-                <th>Tijd</th>
-                <th>Hoogte</th>
-                <th class="text-center"><i class="fas fa-cogs"></i></th>
+                <th>Tempo /km</th>
+                <th>Beweegtijd</th>
+                <th>Gem. hartslag</th>
+                <th>Hoogteverschil</th>
             </tr>
             </thead>
             <tbody>
@@ -61,15 +62,11 @@ $this->pageBreadcrumbs()->setItems([
                         <td><?= $index ?></td>
                         <td><?= $activity["start_date"]; ?></td>
                         <td><?= $activity["name"]; ?></td>
-                        <td><?= number_format($activity["distance"] / 1000, 2, ',', '.'); ?> km</td>
-                        <td><?= number_format($activity["moving_time"] / 60, 2, ':', ''); ?></td>
-                        <td><?= number_format($activity["total_elevation_gain"], 1, ',', ''); ?></td>
-                        <td class="text-center">
-                            <a class="btn btn-sm btn-secondary" title="Edit event"
-                               href="<?= $this->url('strava', ['action' => 'detail', 'id' => $activity["id"]]); ?>">
-                                <i class="fas fa-edit"></i>
-                            </a>
-                        </td>
+                        <td><?= $this->stravaViewHelper()->getDistance($activity["distance"])?> km</td>
+                        <td><?= $this->stravaViewHelper()->getAverageSpeed($activity["average_speed"]); ?></td>
+                        <td><?= $this->stravaViewHelper()->getMovingTime($activity["moving_time"]); ?></td>
+                        <td><?= $activity["average_heartrate"]; ?></td>
+                        <td><?= $this->stravaViewHelper()->getTotalElevationGain($activity["total_elevation_gain"]); ?></td>
                     </tr>
                     <?php $nr++; ?>
                 <?php } ?>

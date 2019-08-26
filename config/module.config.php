@@ -26,6 +26,14 @@ return [
 
         ],
     ],
+    'view_helpers' => [
+        'factories' => [
+            View\Helper\StravaApiHelper::class => View\Helper\Factory\StravaViewHelperFactory::class,
+        ],
+        'aliases' => [
+            'stravaViewHelper' => View\Helper\StravaApiHelper::class,
+        ],
+    ],
     'router' => [
         'routes' => [
             'strava' => [

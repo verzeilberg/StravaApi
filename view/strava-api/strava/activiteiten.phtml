@@ -25,8 +25,10 @@ $this->pageBreadcrumbs()->setItems([
                 <th>Datum</th>
                 <th>Naam</th>
                 <th>Afstand</th>
-                <th>Tijd</th>
-                <th>Hoogte</th>
+                <th>Tempo /km</th>
+                <th>Beweegtijd</th>
+                <th>Gem. hartslag</th>
+                <th>Hoogteverschil</th>
                 <th class="text-center"><i class="fas fa-cogs"></i></th>
             </tr>
             </thead>
@@ -37,11 +39,13 @@ $this->pageBreadcrumbs()->setItems([
                         <?= ($activity->getWorkoutType() == 1? '<i class="fas fa-flag-checkered"></i>':''); ?>
                         <?= ($activity->getWorkoutType() == 3? '<i class="fas fa-dumbbell"></i>':''); ?>
                     </td>
-                    <td><?= $activity->getStartDate()->format('d-m-Y'); ?></td>
+                    <td><?= $activity->getStartDate()->format('d-m-Y H:i:s'); ?></td>
                     <td><?= $activity->getName(); ?></td>
-                    <td><?= number_format($activity->getDistance() / 1000, 2, ',', '.'); ?> km</td>
-                    <td><?= number_format($activity->getMovingTime() / 60, 2, ':', ''); ?></td>
-                    <td><?= number_format($activity->getElevHigh(), 1, ',', ''); ?></td>
+                    <td><?= $this->stravaViewHelper()->getDistance($activity->getDistance())?> km</td>
+                    <td><?= $this->stravaViewHelper()->getAverageSpeed($activity->getAverageSpeed()); ?></td>
+                    <td><?= $this->stravaViewHelper()->getMovingTime($activity->getMovingTime()); ?></td>
+                    <td><?= $activity->getAverageHeartrate(); ?></td>
+                    <td><?= $this->stravaViewHelper()->getTotalElevationGain($activity->GetTotalElevationGain()); ?></td>
                     <td class="text-center">
                         <a class="btn btn-sm btn-secondary" title="Edit event" href="<?= $this->url('strava', ['action' => 'detail', 'id' => $activity->getId()]); ?>">
                             <i class="fas fa-edit"></i>

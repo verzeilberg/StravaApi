@@ -153,7 +153,31 @@ class StravaDbService implements StravaDbServiceInterface
         $query = $qb->getQuery();
         $result = $query->getSingleResult();
 
-        return (int)$result['distance'];
+        return $result['distance'];
+
+    }
+
+    /**
+     *
+     * Get total distance
+     * @param $type type of activity (exampl. Run or Ride)
+     *
+     * @return      integer
+     *
+     */
+    public function getTotalTime($type = null)
+    {
+        $qb = $this->entityManager->getRepository(Activity::class)->createQueryBuilder('a');
+        $qb->select('SUM(a.movingTime) as movingTime');
+        if (!empty($type)) {
+            $qb->where('a.type = :type');
+            $qb->setParameter('type', $type);
+        }
+
+        $query = $qb->getQuery();
+        $result = $query->getSingleResult();
+
+        return $result['movingTime'];
 
     }
 
@@ -168,18 +192,113 @@ class StravaDbService implements StravaDbServiceInterface
     public function getAverageSpeed($type = null)
     {
         $qb = $this->entityManager->getRepository(Activity::class)->createQueryBuilder('a');
-        $qb->select('AVG(a.averageSpeed) as average_speed');
+        $qb->select('SUM(a.averageSpeed) as average_speed, COUNT(a.id) as total_runs');
         if (!empty($type)) {
             $qb->where('a.type = :type');
             $qb->setParameter('type', $type);
         }
-
         $query = $qb->getQuery();
         $result = $query->getSingleResult();
 
-        return (int)$result['average_speed'];
+        return $result['average_speed'] / $result['total_runs'];
 
     }
+
+    /**
+     *
+     * Get average elevation
+     * @param $type type of activity (exampl. Run or Ride)
+     *
+     * @return      integer
+     *
+     */
+    public function getAverageElevation($type = null)
+    {
+        $qb = $this->entityManager->getRepository(Activity::class)->createQueryBuilder('a');
+        $qb->select('SUM(a.totalElevationGain) as total_elevation_gain, COUNT(a.id) as total_runs');
+        if (!empty($type)) {
+            $qb->where('a.type = :type');
+            $qb->setParameter('type', $type);
+        }
+        $query = $qb->getQuery();
+        $result = $query->getSingleResult();
+
+        return $result['total_elevation_gain'] / $result['total_runs'];
+
+    }
+
+    /**
+     *
+     * Get average hearthbeat
+     * @param $type type of activity (exampl. Run or Ride)
+     *
+     * @return      integer
+     *
+     */
+    public function getAverageHeartbeat($type = null)
+    {
+        $qb = $this->entityManager->getRepository(Activity::class)->createQueryBuilder('a');
+        $qb->select('SUM(a.averageHeartrate) as average_heartrate, COUNT(a.id) as total_runs');
+        if (!empty($type)) {
+            $qb->where('a.type = :type');
+            $qb->setParameter('type', $type);
+        }
+        $query = $qb->getQuery();
+        $result = $query->getSingleResult();
+
+        return $result['average_heartrate'] / $result['total_runs'];
+
+    }
+
+    /**
+     *
+     * Get fastest activity
+     * @param $type type of activity (exampl. Run or Ride)
+     *
+     * @return      array
+     *
+     */
+    public function getFastestActivity($type = null)
+    {
+        $qb = $this->entityManager->getRepository(Activity::class)->createQueryBuilder('a');
+        $qb->where('a.workoutType = 1');
+        if (!empty($type)) {
+            $qb->andWhere('a.type = :type');
+            $qb->setParameter('type', $type);
+        }
+
+        $qb->orderBy('a.averageSpeed', 'DESC');
+        $qb->setMaxResults( 1 );
+        $query = $qb->getQuery();
+        $result = $query->getResult();
+        return $result[0];
+
+    }
+
+    /**
+     *
+     * Get longest activity
+     * @param $type type of activity (exampl. Run or Ride)
+     *
+     * @return      array
+     *
+     */
+    public function getLongestActivity($type = null)
+    {
+        $qb = $this->entityManager->getRepository(Activity::class)->createQueryBuilder('a');
+        $qb->where('a.workoutType = 1');
+        if (!empty($type)) {
+            $qb->andWhere('a.type = :type');
+            $qb->setParameter('type', $type);
+        }
+        $qb->orderBy('a.distance', 'DESC');
+        $qb->setMaxResults( 1 );
+        $query = $qb->getQuery();
+        $result = $query->getResult();
+        return $result[0];
+
+    }
+
 
     /**
      *
