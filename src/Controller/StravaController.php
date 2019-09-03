@@ -26,19 +26,25 @@ class StravaController extends AbstractActionController
      */
     protected $stravaOAuthService;
 
+    /*
+ * @var Config
+ */
+    protected $config;
+
 
     public function __construct(
         $vhm,
         StravaDbService $stravaDbService,
         StravaService $stravaService,
-        StravaOAuthService $stravaOAuthService
-
+        StravaOAuthService $stravaOAuthService,
+        $config
     )
     {
         $this->viewhelpermanager = $vhm;
         $this->stravaService = $stravaService;
         $this->stravaOAuthService = $stravaOAuthService;
         $this->stravaDbService = $stravaDbService;
+        $this->config = $config;
     }
 
     public function indexAction()
@@ -104,10 +110,13 @@ class StravaController extends AbstractActionController
         $points = Polyline::decode($encoded);
         $points = Polyline::pair($points);
 
+        $googleMapKey = $this->config['stravaSettings']['googleMapKey'];
+
         return [
             'activity' => $activity,
             'points' => $points,
-            'rounds' => $activity->getRounds()
+            'rounds' => $activity->getRounds(),
+            'googleMapKey' => $googleMapKey
         ];
 
 

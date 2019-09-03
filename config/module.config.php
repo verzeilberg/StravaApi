@@ -112,6 +112,7 @@ return [
         'redirectUri' => '',
         'athleteId' => '',
         'code' => '',
-        'activitiesPerPage' => 30
+        'activitiesPerPage' => 30,
+        'googleMapKey' => ''
     ]
 ];

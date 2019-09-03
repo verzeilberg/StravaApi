@@ -8,7 +8,7 @@ use Application\Model\UnityOfWork;
 
 /**
  * This class represents a event item.
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="StravaApi\Repository\ActivityImportLogRepository")
  * @ORM\Table(name="activity_import_log")
  */
 class ActivityImportLog extends UnityOfWork {

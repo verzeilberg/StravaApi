@@ -1,0 +1,83 @@
+<?php
+namespace StravaApi\Repository;
+
+use Doctrine\ORM\EntityRepository;
+
+class ActivityImportLogRepository extends EntityRepository
+{
+
+    /**
+     *
+     * Get import logs
+     * @return      array
+     *
+     */
+    public function getItems()
+    {
+        return $this->findBy([], ['importDate' => 'DESC']);
+    }
+
+    /**
+     *
+     * Get import log
+     * @return      object
+     *
+     */
+    public function getLastItem()
+    {
+        return $this->findOneBy([], ['importDate' => 'DESC']);
+    }
+
+
+
+    /**
+     *
+     * Set data to new activity
+     *
+     * @param       activity $activity object
+     * @param       currentUser $currentUser whos is logged on
+     * @return      void
+     *
+     */
+    public function setNewImportLog($currentUser = null)
+    {
+        $importLog = $this->createImportLog();
+        $importLog->setDateCreated(new \DateTime());
+        $importLog->setCreatedBy($currentUser);
+        $importLog->setImportDate(new \DateTime());
+        $this->storeImportLog($importLog);
+        return $importLog;
+    }
+
+    /**
+     *
+     * Get import log by id
+     * @var @id
+     * @return      object
+     *
+     */
+    public function getItemById($id)
+    {
+        return $this->findOneBy(['id' => $id], []);
+    }
+
+
+    /**
+     *
+     * Save importlog to database
+     *
+     * @param       importLog object
+     * @return      boolean
+     *
+     */
+    public function storeImportLog($importLog)
+    {
+        try {
+            $this->persist($importLog);
+            $this->flush();
+            return true;
+        } catch (\Doctrine\DBAL\DBALException $e) {
+            return false;
+        }
+    }
+}

@@ -23,7 +23,7 @@ class StravaControllerFactory implements FactoryInterface {
         $stravaService = new StravaService($config, $stravaDbService);
         $vhm = $container->get('ViewHelperManager');
 
-        return new StravaController($vhm, $stravaDbService, $stravaService, $stravaOAuthService);
+        return new StravaController($vhm, $stravaDbService, $stravaService, $stravaOAuthService, $config);
     }
 
 }
