@@ -10,8 +10,8 @@ trough graphs provided by [Chart.js](https://www.chartjs.org/). But you can use 
 Graph library to do this.
 
 ## Installation
-Just clone this module into your project by git. I did it by adding this module to mine
-to my .gitmodules file with below configuration (or your own if you forked it):
+Just clone this module into your project by git. I did it by adding this module to
+my .gitmodules file with below configuration (or your own if you forked it):
 
 >[submodule "StravaApi"]
 >
@@ -28,7 +28,7 @@ Do a composer dump-autoload and your good to go.
 ## Attention
 
 This module is stil in development. So there can be big changes along the way. 
-I have stil to think somethings out to make it easier and clearer.
+I have still to think somethings out to make it easier and clearer.
 
 If you have any questions just send me a [e-mail](http://mailto:sander@verzeilberg.nl). 
 
