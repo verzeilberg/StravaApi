@@ -3,6 +3,7 @@
 namespace StravaApi\Service;
 
 use StravaApi\Entity\Activity;
+use StravaApi\Entity\Round;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;
 use DoctrineORMModule\Form\Annotation\AnnotationBuilder;
@@ -18,6 +19,22 @@ class StravaDbService implements StravaDbServiceInterface
     public function __construct($entityManager)
     {
         $this->entityManager = $entityManager;
+    }
+
+    /*
+     * Get activity based on id
+     *
+     * @params $id
+     *
+     * @return object
+     *
+     */
+    public function getActivityById($id)
+    {
+        $activity = $this->entityManager->getRepository(Activity::class)
+            ->findOneBy(['id' => $id], []);
+
+        return $activity;
     }
 
 
@@ -42,7 +59,7 @@ class StravaDbService implements StravaDbServiceInterface
         try {
             $this->entityManager->persist($activity);
             $this->entityManager->flush();
-            return true;
+            return $activity;
         } catch (\Doctrine\DBAL\DBALException $e) {
             return false;
         }
@@ -73,9 +90,6 @@ class StravaDbService implements StravaDbServiceInterface
     public function setNewActivity($activityArr, $importLog, $currentUser = null)
     {
         $activity = $this->createActivity();
-
-
-
         $activity->setDateCreated(new \DateTime());
         $activity->setCreatedBy($currentUser);
         $activity->setActivityId((int)$activityArr['id']);
@@ -106,7 +120,13 @@ class StravaDbService implements StravaDbServiceInterface
         $activity->setWorkoutType($activityArr["workout_type"]);
         $activity->setActivityImportLog($importLog);
 
-        return $this->storeActivity($activity);
+        $activity = $this->storeActivity($activity);
+
+        if (is_object($activity)) {
+            return $this->setNewRounds($activityArr["splits_metric"], $activity);
+        } else {
+            return $activity;
+        }
     }
 
 
@@ -268,12 +288,39 @@ class StravaDbService implements StravaDbServiceInterface
         }
 
         $qb->orderBy('a.averageSpeed', 'DESC');
-        $qb->setMaxResults( 1 );
+        $qb->setMaxResults(1);
         $query = $qb->getQuery();
         $result = $query->getResult();
         return $result[0];
 
     }
+
+    /**
+     *
+     * Get fastest round
+     * @param $type type of activity (exampl. Run or Ride)
+     *
+     * @return      array
+     *
+     */
+    public function getFastestRound($type = null)
+    {
+        $qb = $this->entityManager->getRepository(Round::class)->createQueryBuilder('r');
+        $qb->leftJoin('r.activity a');
+        $qb->where('a.workoutType = 1');
+        if (!empty($type)) {
+            $qb->andWhere('a.type = :type');
+            $qb->setParameter('type', $type);
+        }
+
+        $qb->orderBy('r.movingTime', 'ASC');
+        $qb->setMaxResults(1);
+        $query = $qb->getQuery();
+        $result = $query->getResult();
+        return $result[0];
+
+    }
+
 
     /**
      *
@@ -292,7 +339,7 @@ class StravaDbService implements StravaDbServiceInterface
             $qb->setParameter('type', $type);
         }
         $qb->orderBy('a.distance', 'DESC');
-        $qb->setMaxResults( 1 );
+        $qb->setMaxResults(1);
         $query = $qb->getQuery();
         $result = $query->getResult();
         return $result[0];
@@ -326,6 +373,77 @@ class StravaDbService implements StravaDbServiceInterface
     public function createActivity()
     {
         return new Activity();
+    }
+
+    /**
+     *
+     * Create a new Round object
+     *
+     * @return      object
+     *
+     */
+    public function createRound()
+    {
+        return new Round();
+    }
+
+    /**
+     *
+     * Save rounds to db
+     *
+     * @var $rounds array with rounds
+     * @var activity to connect rounds to
+     *
+     * @return      boolean
+     *
+     */
+    public function setNewRounds($rounds, $activity)
+    {
+        $result = true;
+        if (count($rounds) > 0) {
+            foreach ($rounds as $item) {
+                $round = $this->createRound();
+                $round->setDistance($item["distance"]);
+                $round->setElapsedTime($item["elapsed_time"]);
+                $round->setElevationDifference($item["elevation_difference"]);
+                $round->setMovingTime($item["moving_time"]);
+                $round->setSplit($item["split"]);
+                $round->setAverageSpeed($item["average_speed"]);
+                $round->setAverageHeartrate($item["average_heartrate"]);
+                $round->setPaceZone($item["pace_zone"]);
+                $round->setActivity($activity);
+                $round->setDateCreated(new \DateTime());
+                $round->setCreatedBy(null);
+
+                $result = $this->storeRound($round);
+                if ($result == false) {
+                    break;
+                }
+            }
+        }
+        return $result;
+    }
+
+    /**
+     *
+     * Save round to database
+     *
+     * @param       round object
+     * @return      void
+     *
+     */
+    public function storeRound($round)
+    {
+        try {
+            $this->entityManager->persist($round);
+            $this->entityManager->flush();
+            return true;
+        } catch (\Doctrine\DBAL\DBALException $e) {
+            \Doctrine\Common\Util\Debug::dump($e);
+            die('fgdg');
+
+            return false;
+        }
     }
 
     /**
@@ -375,4 +493,18 @@ class StravaDbService implements StravaDbServiceInterface
         $paginator->setCurrentPageNumber($currentPage);
         return $paginator;
     }
+
+    public function getStartAndEndDateOfCurrentMonth()
+    {
+        $startDate = new \DateTime('now');
+        $startDate->modify('first day of this month');
+        $endDate = new \DateTime('now');
+        $endDate->modify('last day of this month');
+
+        return [
+            'startDate' => $startDate,
+            'endDate' => $endDate
+        ];
+}
+
 }

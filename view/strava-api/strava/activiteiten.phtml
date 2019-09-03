@@ -47,7 +47,7 @@ $this->pageBreadcrumbs()->setItems([
                     <td><?= $activity->getAverageHeartrate(); ?></td>
                     <td><?= $this->stravaViewHelper()->getTotalElevationGain($activity->GetTotalElevationGain()); ?></td>
                     <td class="text-center">
-                        <a class="btn btn-sm btn-secondary" title="Edit event" href="<?= $this->url('strava', ['action' => 'detail', 'id' => $activity->getId()]); ?>">
+                        <a class="btn btn-sm btn-secondary" title="Edit event" href="<?= $this->url('beheer/strava', ['action' => 'detail', 'id' => $activity->getId()]); ?>">
                             <i class="fas fa-edit"></i>
                         </a>
                     </td>

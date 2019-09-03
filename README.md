@@ -1,86 +1,37 @@
-# Zend Framework Skeleton Module
+# StravaApi
 
-This is a sample skeleton module for use with
-[zend-mvc](https://docs.zendframework.com/zend-mvc) applications.
+This is a zend framework 3 [StravaApi](https://www.strava.com) api.
+
+## Description
+
+This api is used to connect your Strava account to your website. And to manage all your
+Strava stats. You can import your stats into a database and then analyse your data
+trough graphs provided by [Chart.js](https://www.chartjs.org/). But you can use any other 
+Graph library to do this.
 
 ## Installation
+Just clone this module into your project by git. I did it by adding this module to mine
+to my .gitmodules file with below configuration (or your own if you forked it):
 
-First, decide on a namespace for your new module. For purposes of this README,
-we will use `MyNewModule`.
-
-Clone this repository into your application:
-
-```bash
-$ cd module
-$ git clone https://github.com/zendframework/ZendSkeletonModule MyNewModule
-$ cd MyNewModule
-```
-
-If you wish to version the new module with your application, and not as a
-separate project, remove the various Git artifacts within it:
-
-```bash
-$ rm -Rf .git .gitignore
-```
-
-If you want to version it separately, remove the origin remote so you can
-specify a new one later:
-
-```bash
-$ git remote remove origin
-```
-
-The next step will be to change the namespace in the various files. Open each
-of `config/module.config.php`, `src/Module.php`, and
-`src/Controller/SkeletonController.php`, and replace any occurence of
-`ZendSkeletonModule` with your new namespace.
-
-> ### find and sed
+>[submodule "StravaApi"]
 >
-> You can also do this  with the Unix utilties `find` and `sed`:
+>	path = module/StravaApi
 >
-> ```bash
-> $ for php in $(find . -name '*.php');do
-> > sed --in-place -e 's/ZendSkeletonModule/MyNewModule/g' $php
-> > done
-> ```
+>	url = https://github.com/verzeilberg/StravaApi.git
 
-Next, we need to setup autoloading in your application. Open the `composer.json`
-file in your application root, and add an entry under the `autoload.psr-4` key:
+And did a git submodule update.
 
-```json
-"autoload": {
-    "psr-4": {
-        "MyNewModule\\": "module/MyNewModule/src/"
-    }
-}
-```
+Add the Module ('StravaApi') to your config/autoload/modules.config.php
 
-When done adding the entry:
+Do a composer dump-autoload and your good to go.
 
-```bash
-$ composer dump-autoload
-```
+## Attention
 
-Finally, notify your application of the module. Open
-`config/modules.config.php`, and add it to the bottom of the list:
+This module is stil in development. So there can be big changes along the way. 
+I have stil to think somethings out to make it easier and clearer.
 
-```php
-return [
-    /* ... */
-    'MyNewModule',
-]
-```
+If you have any questions just send me a [e-mail](http://mailto:sander@verzeilberg.nl). 
 
-> ### application.config.php
->
-> If you are using an older version of the skeleton application, you may not
-> have a `modules.config.php` file. If that is the case, open `config/application.config.php`
-> instead, and add your module under the `modules` key:
->
-> ```php
-> 'modules' => [
->     /* ... */
->     'MyNewModule',
-> ],
-> ```
+ 
+
+

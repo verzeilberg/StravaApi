@@ -9,10 +9,11 @@ use Application\Model\UnityOfWork;
 
 /**
  * This class represents a event item.
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="StravaApi\Repository\ActivityRepository")
  * @ORM\Table(name="activities")
  */
-class Activity extends UnityOfWork {
+class Activity extends UnityOfWork
+{
 
     /**
      * @ORM\Id
@@ -265,11 +266,23 @@ class Activity extends UnityOfWork {
     protected $description;
 
     /**
+     * One activity has many rounds. This is the inverse side.
+     * @ORM\OneToMany(targetEntity="Round", mappedBy="activity")
+     */
+    private $rounds;
+
+
+    /**
      * Many features have one product. This is the owning side.
      * @ORM\ManyToOne(targetEntity="ActivityImportLog", inversedBy="activities")
      * @ORM\JoinColumn(name="import_log_id", referencedColumnName="id")
      */
     private $activityImportLog;
+
+    public function __construct()
+    {
+        $this->rounds = new ArrayCollection();
+    }
 
     /**
      * @return mixed
@@ -687,6 +700,21 @@ class Activity extends UnityOfWork {
         $this->workoutType = $workoutType;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getRounds()
+    {
+        return $this->rounds;
+    }
+
+    /**
+     * @param mixed $rounds
+     */
+    public function setRounds($rounds)
+    {
+        $this->rounds = $rounds;
+    }
 
 
 }

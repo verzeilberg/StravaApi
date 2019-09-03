@@ -2,6 +2,7 @@
 
 namespace StravaApi\Controller;
 
+use StravaApi\Entity\Round;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\JsonModel;
 
@@ -9,6 +10,8 @@ use StravaApi\Service\StravaDbService;
 use StravaApi\Service\StravaService;
 use StravaApi\Service\StravaOAuthService;
 use StravaApi\Service\StravaImportLogService;
+use StravaApi\Repository\RoundRepository;
+
 
 class StravaImportController extends AbstractActionController
 {
@@ -35,12 +38,24 @@ class StravaImportController extends AbstractActionController
      */
     protected $stravaImportLogService;
 
+    /*
+     * @var RoundRepository
+     */
+    protected $repository;
+
+    /*
+    * @var Config
+    */
+    protected $config;
+
     public function __construct(
         $vhm,
         StravaService $stravaService,
         StravaDbService $stravaDbService,
         StravaOAuthService $stravaOAuthService,
-        StravaImportLogService $stravaImportLogService
+        StravaImportLogService $stravaImportLogService,
+        RoundRepository $repository,
+        $config
     )
     {
         $this->vhm = $vhm;
@@ -48,6 +63,8 @@ class StravaImportController extends AbstractActionController
         $this->stravaDbService = $stravaDbService;
         $this->stravaOAuthService = $stravaOAuthService;
         $this->stravaImportLogService = $stravaImportLogService;
+        $this->repository = $repository;
+        $this->config = $config;
     }
 
     public function indexAction()
@@ -56,8 +73,12 @@ class StravaImportController extends AbstractActionController
 
         $authoraisationLink = null;
         $activities = null;
-        $code = $this->params()->fromQuery('code', null);
-        $code = '4c395e14916c858c1ba4dbd5ab288d69f64461a6';
+
+        $code = $this->config['stravaSettings']['code'];
+        if (empty($code)) {
+            $code = $this->params()->fromQuery('code', null);
+        }
+
         $importLog = $this->stravaImportLogService->getLastItem();
         $importUnixDate =  (is_object($importLog) && is_object($importLog->getImportDate())? $importLog->getImportDate()->format('U'):null);
 
@@ -95,6 +116,7 @@ class StravaImportController extends AbstractActionController
         $this->stravaOAuthService->initialiseClient($code);
         $client = $this->stravaOAuthService->getClient();
         $activity = $this->stravaService->getActivity($client, $activityId);
+
         if (!empty($activity)) {
             $importLog = $this->stravaImportLogService->getItemById($importId);
             $success = $this->stravaDbService->setNewActivity($activity, $importLog, $this->currentUser());

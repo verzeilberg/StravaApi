@@ -10,6 +10,7 @@ use StravaApi\Controller\StravaImportController;
 use StravaApi\Service\StravaOAuthService;
 use StravaApi\Service\StravaService;
 use StravaApi\Service\StravaDbService;
+use StravaApi\Entity\Round;
 
 /**
  * This is the factory for AuthController. Its purpose is to instantiate the controller
@@ -25,12 +26,18 @@ class StravaImportControllerFactory implements FactoryInterface {
         $stravaService = new StravaService($config, $stravaDbService);
         $stravaImportLogService = new StravaImportLogService($entityManager);
         $vhm = $container->get('ViewHelperManager');
+        $repository = $entityManager->getRepository(Round::class);
+
+
+
         return new StravaImportController(
             $vhm,
             $stravaService,
             $stravaDbService,
             $stravaOAuthService,
-            $stravaImportLogService
+            $stravaImportLogService,
+            $repository,
+            $config
         );
     }
 

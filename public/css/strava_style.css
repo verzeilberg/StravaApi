@@ -7,3 +7,12 @@
     margin: 5px 0;
     color: #7abaff;
 }
+
+#map {
+    height: 600px;
+}
+
+
+#myChart, #myChart2 {
+    width:100% !important;
+}

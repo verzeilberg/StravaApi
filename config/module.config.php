@@ -111,6 +111,7 @@ return [
         'clientSecret' => '',
         'redirectUri' => '',
         'athleteId' => '',
+        'code' => '',
         'activitiesPerPage' => 30
     ]
 ];

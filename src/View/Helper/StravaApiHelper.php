@@ -63,4 +63,17 @@ class StravaApiHelper extends AbstractHelper
         return gmdate("H:i:s",1000/$averageSpeed);
     }
 
+    public function getAverageSpeedForChart($averageSpeed)
+    {
+        return ltrim(gmdate("i.s",1000/$averageSpeed), 0);
+    }
+
+    /*
+ * Get hearthbeath
+ */
+    public function getHeartbeath($hearthBeath)
+    {
+        return number_format($hearthBeath, 0, ',', '');
+    }
+
 }

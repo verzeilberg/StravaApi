@@ -160,3 +160,26 @@ $this->pageBreadcrumbs()->setItems([
         </table>
     </div>
 </div>
+
+<div class="row mt-3">
+    <div class="col">
+        <table class="table table-dark table-sm table-bordered table-hover table-striped">
+            <thead class="thead-dark">
+            <tr>
+                <th class="text-center medal"><i class="fas fa-stopwatch"></i></th>
+            </tr>
+            <tr>
+                <th class="text-center">
+                    <h5>Snelste 1 km<br/><?= $fastestRound->getActivity()->getName(); ?></h5>
+                    <h7><?= $fastestRound->getActivity()->getStartDateLocal()->format('d-m-Y'); ?></h7>
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td class="text-center"><?= $this->stravaViewHelper()->getAverageSpeed($fastestRound->getAverageSpeed()); ?></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -17,43 +17,294 @@ $this->pageBreadcrumbs()->setItems([
     </div>
 </div>
 <div class="row">
+    <div class="col text-center">
+        <h1><?= $activity->getName(); ?></h1>
+        <h3><?= $activity->getStartDate()->format('d-m-Y'); ?></h3>
+    </div>
+</div>
+<div class="row mb-3">
+    <div class="col text-center">
+        <?= $activity->getDescription(); ?>
+    </div>
+</div>
+<div class="row">
     <div class="col">
-
+        <div id="map"></div>
+    </div>
+</div>
+<div class="row">
+    <div class="col">
         <table class="table table-dark table-sm table-bordered table-hover table-striped">
             <thead class="thead-dark">
             <tr>
-                <th class="text-center"><i class="fas fa-flag-checkered"> / <i class="fas fa-dumbbell"></i></th>
-                <th>Datum</th>
-                <th>Naam</th>
-                <th>Afstand</th>
-                <th>Tijd</th>
-                <th>Hoogte</th>
-                <th class="text-center"><i class="fas fa-cogs"></i></th>
+                <th class="text-center"><i class="fas fa-road"></i></th>
+                <th class="text-center"><i class="fas fa-tachometer-alt"></i></th>
+                <th class="text-center"><i class="fas fa-stopwatch"></i></th>
+                <th class="text-center"><i class="fas fa-heartbeat"></i></th>
+                <th class="text-center"><i class="fas fa-mountain"></i></th>
             </tr>
             </thead>
             <tbody>
-                <tr <?= ($activity["workout_type"] == 1? 'class="bg-success"':''); ?>>
-                    <td class="text-center">
-                        <?= ($activity["workout_type"] == 1? '<i class="fas fa-flag-checkered"></i>':''); ?>
-                        <?= ($activity["workout_type"] == 3? '<i class="fas fa-dumbbell"></i>':''); ?>
-                    </td>
-                    <td><?= $activity["start_date"]; ?></td>
-                    <td><?= $activity["name"]; ?></td>
-                    <td><?= number_format($activity["distance"] / 1000, 2, ',', '.'); ?> km</td>
-                    <td><?= number_format($activity["moving_time"] / 60, 2, ':', ''); ?></td>
-                    <td><?= number_format($activity["total_elevation_gain"], 1, ',', ''); ?></td>
-                    <td class="text-center">
-                        <a class="btn btn-sm btn-secondary" title="Edit event" href="<?= $this->url('strava', ['action' => 'detail', 'id' => $activity["id"]]); ?>">
-                            <i class="fas fa-edit"></i>
-                        </a>
-                    </td>
-                </tr>
             <tr>
-                <td colspan="7">
-                    <iframe src="https://maps.googleapis.com/maps/api/staticmap?size=600x300&maptype=roadmap&path=enc:<?= $activity["map"]["polyline"] ?>&key=AIzaSyDphZyrqkSNlFDwuWOCMGnzLF39L8g_nlw"></iframe>
-                </td>
+                <td class="text-center"><?= $this->stravaViewHelper()->getDistance($activity->getDistance()) ?> km</td>
+                <td class="text-center"><?= $this->stravaViewHelper()->getAverageSpeed($activity->getAverageSpeed()); ?></td>
+                <td class="text-center"><?= $this->stravaViewHelper()->getMovingTime($activity->getMovingTime()); ?></td>
+                <td class="text-center"><?= $activity->getAverageHeartrate(); ?></td>
+                <td class="text-center"><?= $this->stravaViewHelper()->getTotalElevationGain($activity->GetTotalElevationGain()); ?></td>
             </tr>
             </tbody>
         </table>
     </div>
 </div>
+<div class="row">
+    <div class="col">
+        <table class="table table-dark table-sm table-bordered table-hover table-striped">
+            <thead class="thead-dark">
+            <tr>
+                <th><i class="fas fa-road"></i></th>
+                <th><i class="fas fa-tachometer-alt"></i></th>
+                <th><i class="fas fa-heartbeat"></i></th>
+                <th><i class="fas fa-mountain"></i></th>
+            </tr>
+            </thead>
+            <tbody>
+            <?php $distance = 0; ?>
+            <?php foreach ($rounds AS $index => $effort) {
+                $distance = $distance + $effort->getDistance();
+                ?>
+                <tr>
+                    <td><?= $this->stravaViewHelper()->getDistance($distance); ?></td>
+                    <td><?= $this->stravaViewHelper()->getAverageSpeed($effort->getAverageSpeed()); ?></td>
+                    <td><?= $this->stravaViewHelper()->getHeartbeath($effort->getAverageHeartrate()); ?></td>
+                    <td><?= $this->stravaViewHelper()->getTotalElevationGain($effort->getElevationDifference()); ?></td>
+                </tr>
+                <?php
+            }
+            ?>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="row">
+    <div class="col">
+        <canvas id="myChart" width="50%"></canvas>
+    </div>
+    <div class="col">
+        <canvas id="myChart2" width="50%"></canvas>
+    </div>
+</div>
+
+<script>
+
+    var ctx = document.getElementById('myChart');
+    var mixedChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            datasets: [{
+                label: 'Gemiddelde tempo per km',
+                data: [
+                    <?php foreach($rounds AS $round) { ?>
+                    <?= $this->stravaViewHelper()->getAverageSpeedForChart($round->getAverageSpeed()); ?>,
+                    <?php } ?>
+                ],
+                backgroundColor: [
+                    <?php foreach($rounds AS $round) { ?>
+                    'rgba(222, 226, 230, 0.2)',
+                    <?php } ?>
+                ]
+            }, {
+                label: 'Gemiddelde tempo totaal',
+                data: [
+                    <?php foreach($rounds AS $round) { ?>
+                    <?= $this->stravaViewHelper()->getAverageSpeedForChart($activity->getAverageSpeed()); ?>,
+                    <?php } ?>
+                ],
+                borderWidth: 5,
+                backgroundColor: [
+                    <?php foreach($rounds AS $round) { ?>
+                    'rgba(222, 226, 230, 0)',
+                    <?php } ?>
+                ],
+                borderColor: [
+                    <?php foreach($rounds AS $round) { ?>
+                    'rgba(254, 0, 0, 0.2)',
+                    <?php } ?>
+                ],
+                // Changes this dataset to become a line
+                type: 'line'
+            }],
+            labels: [
+                <?php $distance = 0; ?>
+                <?php foreach($rounds AS $round) {
+                $distance = $distance + $round->getDistance();
+                ?>
+                "<?= $this->stravaViewHelper()->getDistance($distance); ?>",
+                <?php } ?>
+            ]
+        },
+        options: {
+            title: {
+                display: true,
+                text: 'Gemiddelde tempo per km afgezet tegen totale gemiddelde tempo',
+                fontSize: 16,
+                fontColor: 'white',
+                fontFamily: 'Arial, Verdana'
+            },
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true,
+                        fontColor: "#CCC"
+                    },
+                    gridLines: {
+                        display: false,
+                        color: "#FFFFFF",
+                        fontColor: 'white',
+                    },
+                }],
+                xAxes: [{
+                    gridLines: {
+                        display: false,
+                        color: "#FFFFFF",
+                        fontColor: 'white',
+                    },
+                    ticks: {
+                        fontColor: "#CCC"
+                    },
+                }]
+            },
+            legend: {
+                labels: {
+                    // This more specific font property overrides the global property
+                    fontColor: 'white',
+                    defaultFontFamily: 'Arial, Verdana'
+                }
+            },
+
+        }
+    });
+
+    var ctx2 = document.getElementById('myChart2');
+    var mixedChart2 = new Chart(ctx2, {
+        type: 'bar',
+        data: {
+            datasets: [{
+                label: 'Gemiddelde hartslag per km',
+                data: [
+                    <?php foreach($rounds AS $round) { ?>
+                    <?= $round->getAverageHeartrate(); ?>,
+                    <?php } ?>
+                ],
+                backgroundColor: [
+                    <?php foreach($rounds AS $round) { ?>
+                    'rgba(222, 226, 230, 0.2)',
+                    <?php } ?>
+                ]
+            }, {
+                label: 'Gemiddelde hartslag totaal',
+                data: [
+                    <?php foreach($rounds AS $round) { ?>
+                    <?= $activity->getAverageHeartrate(); ?>,
+                    <?php } ?>
+                ],
+                borderWidth: 5,
+                backgroundColor: [
+                    <?php foreach($rounds AS $round) { ?>
+                    'rgba(222, 226, 230, 0)',
+                    <?php } ?>
+                ],
+                borderColor: [
+                    <?php foreach($rounds AS $round) { ?>
+                    'rgba(254, 0, 0, 0.2)',
+                    <?php } ?>
+                ],
+                // Changes this dataset to become a line
+                type: 'line'
+            }],
+            labels: [
+                <?php $distance = 0; ?>
+                <?php foreach($rounds AS $round) {
+                $distance = $distance + $round->getDistance();
+                ?>
+                "<?= $this->stravaViewHelper()->getDistance($distance); ?>",
+                <?php } ?>
+            ]
+        },
+        options: {
+            title: {
+                display: true,
+                text: 'Gemiddelde hartslag per km afgezet tegen totale gemiddelde hartslag',
+                fontSize: 16,
+                fontColor: 'white',
+                fontFamily: 'Arial, Verdana'
+            },
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true,
+                        fontColor: "#CCC"
+                    },
+                    gridLines: {
+                        display: false,
+                        color: "#FFFFFF",
+                        fontColor: 'white',
+                    },
+                }],
+                xAxes: [{
+                    gridLines: {
+                        display: false,
+                        color: "#FFFFFF",
+                        fontColor: 'white',
+                    },
+                    ticks: {
+                        fontColor: "#CCC"
+                    },
+                }]
+            },
+            legend: {
+                labels: {
+                    // This more specific font property overrides the global property
+                    fontColor: 'white',
+                    defaultFontFamily: 'Arial, Verdana'
+                }
+            },
+
+        }
+    });
+
+
+    //Create polyline on google map
+    function initMap() {
+        var map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 14,
+            center: {lat: <?= $points[0][0]; ?>, lng: <?= $points[0][1]; ?>},
+            mapTypeId: 'terrain'
+        });
+
+        var flightPlanCoordinates = [
+
+            <?php foreach($points AS $point) { ?>
+            {lat: <?= $point[0]; ?>, lng: <?= $point[1]; ?>},
+            <?php } ?>
+        ];
+
+        var bounds = new google.maps.LatLngBounds();
+        for (var i = 0; i < flightPlanCoordinates.length; i++) {
+            bounds.extend(flightPlanCoordinates[i]);
+        }
+        map.fitBounds(bounds);
+
+        var flightPath = new google.maps.Polyline({
+            path: flightPlanCoordinates,
+            geodesic: true,
+            strokeColor: '#FF0000',
+            strokeOpacity: 1.0,
+            strokeWeight: 2
+        });
+
+        flightPath.setMap(map);
+    }
+</script>
+<script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB1n_2dwkLKZ8lMls39ZGeLuxQ08oyniIs&callback=initMap">
+</script>
