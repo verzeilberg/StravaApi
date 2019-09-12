@@ -3,18 +3,16 @@
 namespace StravaApi\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
-use StravaApi\Service\StravaDbService;
+use Zend\View\HelperPluginManager;
 use StravaApi\Service\StravaService;
-use StravaApi\Service\StravaOAuthService;
 use Polyline;
 
 class StravaController extends AbstractActionController
 {
-    protected $viewhelpermanager;
     /*
-     * @ StravaDbService
+     * @HelperPluginManager
      */
-    protected $stravaDbService;
+    protected $viewhelpermanager;
 
     /*
      * @ StravaService
@@ -22,35 +20,19 @@ class StravaController extends AbstractActionController
     protected $stravaService;
 
     /*
-     * @var StravaOAuthService
+     * @var Config
      */
-    protected $stravaOAuthService;
-
-    /*
-     * @var
-     */
-    protected $activityRepository;
-
-    /*
- * @var Config
- */
     protected $config;
 
 
     public function __construct(
-        $vhm,
-        StravaDbService $stravaDbService,
+        HelperPluginManager $vhm,
         StravaService $stravaService,
-        StravaOAuthService $stravaOAuthService,
-        $activityRepository,
-        $config
+        array $config
     )
     {
         $this->viewhelpermanager = $vhm;
         $this->stravaService = $stravaService;
-        $this->stravaOAuthService = $stravaOAuthService;
-        $this->stravaDbService = $stravaDbService;
-        $this->activityRepository = $activityRepository;
         $this->config = $config;
     }
 
@@ -58,21 +40,21 @@ class StravaController extends AbstractActionController
     {
         $this->layout('layout/beheer');
         $this->viewhelpermanager->get('headLink')->appendStylesheet('/css/strava_style.css');
-
-        $totalRunActivities = $this->stravaDbService->getTotalActivities('Run');
-        $totalRunDistance = $this->stravaDbService->getTotalDistance('Run');
-        $totalRunTime = $this->stravaDbService->getTotalTime('Run');
-        $averageSpeed = $this->stravaDbService->getAverageSpeed('Run');
-        $averageElevation = $this->stravaDbService->getAverageElevation('Run');
-        $averageHeartbeat = $this->stravaDbService->getAverageHeartbeat('Run');
-
-        $fastestActivity = $this->stravaDbService->getFastestActivity('Run');
-        $fastestRound = $this->stravaDbService->getFastestRound('Run');
-        $longestActivity = $this->stravaDbService->getLongestActivity('Run');
-
-        $fastestTrainingActivity = $this->stravaDbService->getFastestActivity('Run', 3);
-        $fastestTrainingRound = $this->stravaDbService->getFastestRound('Run', 3);
-        $longestTrainingActivity = $this->stravaDbService->getLongestActivity('Run', 3);
+        //All data
+        $totalRunActivities = $this->stravaService->activityRepository->getTotalActivities('Run');
+        $totalRunDistance = $this->stravaService->activityRepository->getTotalDistance('Run');
+        $totalRunTime = $this->stravaService->activityRepository->getTotalTime('Run');
+        $averageSpeed = $this->stravaService->activityRepository->getAverageSpeed('Run');
+        $averageElevation = $this->stravaService->activityRepository->getAverageElevation('Run');
+        $averageHeartbeat = $this->stravaService->activityRepository->getAverageHeartbeat('Run');
+        //Race data
+        $fastestActivity = $this->stravaService->activityRepository->getFastestActivity('Run');
+        $fastestRound = $this->stravaService->roundRepository->getFastestRound('Run');
+        $longestActivity = $this->stravaService->activityRepository->getLongestActivity('Run');
+        //Training data
+        $fastestTrainingActivity = $this->stravaService->activityRepository->getFastestActivity('Run', 3);
+        $fastestTrainingRound = $this->stravaService->roundRepository->getFastestRound('Run', 3);
+        $longestTrainingActivity = $this->stravaService->activityRepository->getLongestActivity('Run', 3);
 
 
         return [
@@ -95,11 +77,10 @@ class StravaController extends AbstractActionController
     {
         $this->layout('layout/beheer');
         $page = $this->params()->fromQuery('page', 1);
-        $query = $this->stravaDbService->getItems();
 
-        $years = $this->stravaDbService->getYearsByActivities();
-        $activities = $this->stravaDbService->getItemsForPagination($query, $page, 10);
-
+        $query = $this->stravaService->activityRepository->getActivities();
+        $activities = $this->stravaService->getItemsForPagination($query, $page, 10);
+        $years = $this->stravaService->activityRepository->getYearsByActivities();
         return [
             'activities' => $activities,
             'years' => $years
@@ -118,7 +99,7 @@ class StravaController extends AbstractActionController
         if (empty($id)) {
             return $this->redirect()->toRoute('strava');
         }
-        $activity = $this->stravaDbService->getActivityById($id);
+        $activity = $this->stravaService->activityRepository->getActivityById($id);
         if (empty($activity)) {
             return $this->redirect()->toRoute('strava');
         }
@@ -135,10 +116,5 @@ class StravaController extends AbstractActionController
             'rounds' => $activity->getRounds(),
             'googleMapKey' => $googleMapKey
         ];
-
-
     }
-
-
-
 }

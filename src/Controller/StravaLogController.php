@@ -2,40 +2,39 @@
 
 namespace StravaApi\Controller;
 
+use StravaApi\Service\StravaService;
 use Zend\Mvc\Controller\AbstractActionController;
+use Zend\View\HelperPluginManager;
 use Zend\View\Model\JsonModel;
-use StravaApi\Repository\ActivityImportLogRepository;
 
 
 class StravaLogController extends AbstractActionController
 {
 
     /*
-     * @var ViewHelperManager
+     * @var HelperPluginManager
      */
     protected $vhm;
 
     /*
-     * @var
+     * @var StravaService
      */
-    protected $repository;
+    protected $stravaService;
 
     public function __construct(
-        $vhm,
-        ActivityImportLogRepository $repository
+        HelperPluginManager $vhm,
+        StravaService $stravaService
 
     )
     {
         $this->vhm = $vhm;
-        $this->repository = $repository;
+        $this->stravaService = $stravaService;
     }
 
     public function indexAction()
     {
         $this->layout('layout/beheer');
-
-        $items = $this->repository->findBy([], ['importDate' => 'DESC']);
-
+        $items = $this->stravaService->activityImportLogRepository->findBy([], ['importDate' => 'DESC']);
         return [
             'items' => $items
         ];
@@ -50,23 +49,18 @@ class StravaLogController extends AbstractActionController
             $errorMessage = 'Geen log id meegegeven!';
             $success = false;
         }
-        $activityLog = $this->repository->findOneBy(['id' => $removelogId]);
-
-        $item = $this->repository->findOneBy([], ['importDate' => 'DESC']);
-
+        $activityLog = $this->stravaService->activityImportLogRepository->findOneBy(['id' => $removelogId]);
+        $item = $this->stravaService->activityImportLogRepository->findOneBy([], ['importDate' => 'DESC']);
         if (is_object($activityLog) && $item->getId() == $activityLog->getId()) {
-            $this->repository->removeImportLog($activityLog);
+            $this->stravaService->activityImportLogRepository->removeImportLog($activityLog);
         } else {
             $errorMessage = 'Geen log gevonden!';
             $success = false;
         }
-
-
         return new JsonModel([
             'errorMessage' => $errorMessage,
             'success' => $success,
             'removelogId' => $removelogId
         ]);
     }
-
 }
