@@ -8,6 +8,7 @@ use StravaApi\Controller\StravaController;
 use StravaApi\Service\StravaDbService;
 use StravaApi\Service\StravaService;
 use StravaApi\Service\StravaOAuthService;
+use StravaApi\Entity\Activity;
 
 /**
  * This is the factory for AuthController. Its purpose is to instantiate the controller
@@ -22,8 +23,9 @@ class StravaControllerFactory implements FactoryInterface {
         $stravaDbService = new StravaDbService($entityManager);
         $stravaService = new StravaService($config, $stravaDbService);
         $vhm = $container->get('ViewHelperManager');
+        $activityRepository = $entityManager->getRepository(Activity::class);
 
-        return new StravaController($vhm, $stravaDbService, $stravaService, $stravaOAuthService, $config);
+        return new StravaController($vhm, $stravaDbService, $stravaService, $stravaOAuthService, $config, $activityRepository);
     }
 
 }

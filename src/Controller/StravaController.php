@@ -27,6 +27,11 @@ class StravaController extends AbstractActionController
     protected $stravaOAuthService;
 
     /*
+     * @var
+     */
+    protected $activityRepository;
+
+    /*
  * @var Config
  */
     protected $config;
@@ -37,6 +42,7 @@ class StravaController extends AbstractActionController
         StravaDbService $stravaDbService,
         StravaService $stravaService,
         StravaOAuthService $stravaOAuthService,
+        $activityRepository,
         $config
     )
     {
@@ -44,6 +50,7 @@ class StravaController extends AbstractActionController
         $this->stravaService = $stravaService;
         $this->stravaOAuthService = $stravaOAuthService;
         $this->stravaDbService = $stravaDbService;
+        $this->activityRepository = $activityRepository;
         $this->config = $config;
     }
 
@@ -63,6 +70,11 @@ class StravaController extends AbstractActionController
         $fastestRound = $this->stravaDbService->getFastestRound('Run');
         $longestActivity = $this->stravaDbService->getLongestActivity('Run');
 
+        $fastestTrainingActivity = $this->stravaDbService->getFastestActivity('Run', 3);
+        $fastestTrainingRound = $this->stravaDbService->getFastestRound('Run', 3);
+        $longestTrainingActivity = $this->stravaDbService->getLongestActivity('Run', 3);
+
+
         return [
             'totalRunActivities' => $totalRunActivities,
             'totalRunDistance' => $totalRunDistance,
@@ -72,7 +84,10 @@ class StravaController extends AbstractActionController
             'averageHeartbeat' => $averageHeartbeat,
             'fastestActivity' => $fastestActivity,
             'longestActivity' => $longestActivity,
-            'fastestRound' => $fastestRound
+            'fastestRound' => $fastestRound,
+            'fastestTrainingActivity' => $fastestTrainingActivity,
+            'fastestTrainingRound' => $fastestTrainingRound,
+            'longestTrainingActivity' => $longestTrainingActivity
         ];
     }
 
@@ -82,10 +97,12 @@ class StravaController extends AbstractActionController
         $page = $this->params()->fromQuery('page', 1);
         $query = $this->stravaDbService->getItems();
 
+        $years = $this->stravaDbService->getYearsByActivities();
         $activities = $this->stravaDbService->getItemsForPagination($query, $page, 10);
 
         return [
-            'activities' => $activities
+            'activities' => $activities,
+            'years' => $years
         ];
     }
 
@@ -121,5 +138,7 @@ class StravaController extends AbstractActionController
 
 
     }
+
+
 
 }

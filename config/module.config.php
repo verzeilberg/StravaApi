@@ -11,10 +11,12 @@ return [
         'factories' => [
             Controller\StravaController::class => Controller\Factory\StravaControllerFactory::class,
             Controller\StravaImportController::class => Controller\Factory\StravaImportControllerFactory::class,
+            Controller\StravaLogController::class => Controller\Factory\StravaLogControllerFactory::class,
         ],
         'aliases' => [
             'stravabeheer' => Controller\StravaController::class,
-            'stravaimportbeheer' => Controller\StravaImportController::class
+            'stravaimportbeheer' => Controller\StravaImportController::class,
+            'stravalogbeheer' => Controller\StravaLogController::class
         ],
     ],
     'service_manager' => [
@@ -64,6 +66,20 @@ return [
                     ],
                 ],
             ],
+            'stravalog' => [
+                'type' => 'segment',
+                'options' => [
+                    'route' => '/stravalog[/:action][/:id]',
+                    'constraints' => [
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id' => '[0-9]+',
+                    ],
+                    'defaults' => [
+                        'controller' => Controller\StravaLogController::class,
+                        'action' => 'index',
+                    ],
+                ],
+            ],
         ],
     ],
     // The 'access_filter' key is used by the User module to restrict or permit
@@ -75,6 +91,10 @@ return [
                 ['actions' => '*', 'allow' => '+strava.manage']
             ],
             'stravaimportbeheer' => [
+                // to anyone.
+                ['actions' => '*', 'allow' => '+strava.manage']
+            ],
+            'stravalogbeheer' => [
                 // to anyone.
                 ['actions' => '*', 'allow' => '+strava.manage']
             ],

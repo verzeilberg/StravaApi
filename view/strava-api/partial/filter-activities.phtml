@@ -1,0 +1,89 @@
+<div class="row">
+    <div class="col">
+        <h3>Filter activiteiten</h3>
+    </div>
+</div>
+<div class="row mb-2">
+    <form class="form-inline">
+        <div class="col">
+            <div class="form-group row">
+                <label class="col-md-3" for="search">Zoeken op naam</label>
+                <div class="col-md-2">
+                    <input type="search" class="form-control" id="search" aria-describedby="search"
+                           placeholder="Search">
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="form-group row">
+                <label class="col-md-2" for="search">Type workout</label>
+                <div class="col-md-2">
+                    <select class="form-control" name="workoutType">
+                        <option>--Maak uw keuze--</option>
+                        <option value="1">Wedstrijd</option>
+                        <option value="3">Training</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="form-group row">
+                <label class="col-md-2" for="search">Jaren</label>
+                <div class="col-md-2">
+                    <select class="form-control" name="workoutType">
+                        <option>--Maak uw keuze--</option>
+                        <?php foreach ($years AS $year) { ?>
+                            <option value="<?= $year['jaar'] ?>"><?= $year['jaar'] ?></option>
+                        <?php } ?>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="form-group row">
+    <label class="col-md-2" for="search">Km's</label>
+    <div class="col-md-2">
+        <input class="form-control" type="text" value="" name="kmFrom" />
+    </div>
+    <div class="col-md-2">
+        <input class="form-control" type="text" value="" name="kmTo" />
+    </div>
+</div>
+<div class="form-group row mb-3">
+    <label class="col-md-2" for="search">Tempo</label>
+    <div class="col-md-2">
+        <input class="form-control" type="text" value="" name="tempoFrom" />
+    </div>
+    <div class="col-md-2">
+        <input class="form-control" type="text" value="" name="tempoTo" />
+    </div>
+</div>
+<div class="form-group row mb-3">
+    <label class="col-md-2" for="search">Beweegtijd</label>
+    <div class="col-md-2">
+        <input class="form-control" type="text" value="" name="movingTimeFrom" />
+    </div>
+    <div class="col-md-2">
+        <input class="form-control" type="text" value="" name="movingTimeTo" />
+    </div>
+</div>
+<div class="form-group row mb-3">
+    <label class="col-md-2" for="search">Hartslag</label>
+    <div class="col-md-2">
+        <input class="form-control" type="text" value="" name="hearthRateFrom" />
+    </div>
+    <div class="col-md-2">
+        <input class="form-control" type="text" value="" name="hearthRateTo" />
+    </div>
+</div>
+<div class="form-group row mb-3">
+    <label class="col-md-2" for="search">Hoogteverschil</label>
+    <div class="col-md-2">
+        <input class="form-control" type="text" value="" name="elevationGainFrom" />
+    </div>
+    <div class="col-md-2">
+        <input class="form-control" type="text" value="" name="elevationGainTo" />
+    </div>
+</div>

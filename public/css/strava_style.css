@@ -16,3 +16,15 @@
 #myChart, #myChart2 {
     width:100% !important;
 }
+
+i.gold {
+    color: #FFD700;
+}
+
+i.brown{
+    color: #654321;
+}
+
+i.darkBlue {
+    color: #0db520;
+}

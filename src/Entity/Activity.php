@@ -267,7 +267,7 @@ class Activity extends UnityOfWork
 
     /**
      * One activity has many rounds. This is the inverse side.
-     * @ORM\OneToMany(targetEntity="Round", mappedBy="activity")
+     * @ORM\OneToMany(targetEntity="Round", mappedBy="activity", orphanRemoval=true, cascade={"persist", "remove"})
      */
     private $rounds;
 

@@ -104,7 +104,7 @@ class Round extends UnityOfWork {
     /**
      * Many rounds have one activity. This is the owning side.
      * @ORM\ManyToOne(targetEntity="Activity", inversedBy="rounds")
-     * @ORM\JoinColumn(name="activity_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="activity_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
      */
     private $activity;
 

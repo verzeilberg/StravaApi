@@ -27,7 +27,8 @@ class ActivityImportLog extends UnityOfWork {
 
     /**
      * One activity import log has many activities. This is the inverse side.
-     * @ORM\OneToMany(targetEntity="Activity", mappedBy="activityImportLog")
+     * @ORM\OneToMany(targetEntity="Activity", mappedBy="activityImportLog", orphanRemoval=true, cascade={"persist", "remove"})
+     *
      */
     private $activities;
 

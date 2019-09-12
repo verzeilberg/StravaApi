@@ -274,18 +274,20 @@ class StravaDbService implements StravaDbServiceInterface
      *
      * Get fastest activity
      * @param $type type of activity (exampl. Run or Ride)
+     * @param $workoutType type of workout 1 = Competition 13 = Training
      *
      * @return      array
      *
      */
-    public function getFastestActivity($type = null)
+    public function getFastestActivity($type = null, $workoutType = 1)
     {
         $qb = $this->entityManager->getRepository(Activity::class)->createQueryBuilder('a');
-        $qb->where('a.workoutType = 1');
+        $qb->where('a.workoutType = :workOut');
         if (!empty($type)) {
             $qb->andWhere('a.type = :type');
             $qb->setParameter('type', $type);
         }
+        $qb->setParameter('workOut', $workoutType);
 
         $qb->orderBy('a.averageSpeed', 'DESC');
         $qb->setMaxResults(1);
@@ -299,20 +301,22 @@ class StravaDbService implements StravaDbServiceInterface
      *
      * Get fastest round
      * @param $type type of activity (exampl. Run or Ride)
+     * @param $workoutType type of workout 1 = Competition 13 = Training
      *
      * @return      array
      *
      */
-    public function getFastestRound($type = null)
+    public function getFastestRound($type = null, $workoutType = 1)
     {
         $qb = $this->entityManager->getRepository(Round::class)->createQueryBuilder('r');
         $qb->leftJoin('r.activity a');
-        $qb->where('a.workoutType = 1');
+        $qb->where('a.workoutType = :workOut');
+        $qb->andWhere('r.movingTime > 0');
         if (!empty($type)) {
             $qb->andWhere('a.type = :type');
             $qb->setParameter('type', $type);
         }
-
+        $qb->setParameter('workOut', $workoutType);
         $qb->orderBy('r.movingTime', 'ASC');
         $qb->setMaxResults(1);
         $query = $qb->getQuery();
@@ -326,18 +330,20 @@ class StravaDbService implements StravaDbServiceInterface
      *
      * Get longest activity
      * @param $type type of activity (exampl. Run or Ride)
+     * @param $workoutType type of workout 1 = Competition 13 = Training
      *
      * @return      array
      *
      */
-    public function getLongestActivity($type = null)
+    public function getLongestActivity($type = null, $workoutType = 1)
     {
         $qb = $this->entityManager->getRepository(Activity::class)->createQueryBuilder('a');
-        $qb->where('a.workoutType = 1');
+        $qb->where('a.workoutType = :workOut');
         if (!empty($type)) {
             $qb->andWhere('a.type = :type');
             $qb->setParameter('type', $type);
         }
+        $qb->setParameter('workOut', $workoutType);
         $qb->orderBy('a.distance', 'DESC');
         $qb->setMaxResults(1);
         $query = $qb->getQuery();
@@ -494,17 +500,44 @@ class StravaDbService implements StravaDbServiceInterface
         return $paginator;
     }
 
-    public function getStartAndEndDateOfCurrentMonth()
+    public function getStartAndEndDateByMonthAndYear($year = null, $month = null)
     {
-        $startDate = new \DateTime('now');
+
+        if ($year === null) {
+            $year = new \DateTime('now');
+            $startDate = new \DateTime($year->format('Y') .'-'.$month.'-01');
+            $endDate = clone $startDate;
+        } else if ($month === null) {
+            $month = new \DateTime('now');
+            $startDate = new \DateTime($year .'-'.$month->format('m').'-01');
+            $endDate = clone $startDate;
+        } else {
+            $startDate = new \DateTime($year .'-'.$month.'-01');
+            $endDate = clone $startDate;
+        }
+
         $startDate->modify('first day of this month');
-        $endDate = new \DateTime('now');
         $endDate->modify('last day of this month');
 
         return [
             'startDate' => $startDate,
             'endDate' => $endDate
         ];
-}
+    }
+
+    /*
+     * Get years from activities
+     *
+     * @return array
+     *
+     */
+    public function getYearsByActivities()
+    {
+        return $this->entityManager->getRepository(Activity::class)->createQueryBuilder('a')
+            ->select('YEAR(a.startDate) as jaar')
+            ->groupBy('jaar')
+            ->getQuery()
+            ->getScalarResult();
+    }
 
 }

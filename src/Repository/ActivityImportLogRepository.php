@@ -80,4 +80,18 @@ class ActivityImportLogRepository extends EntityRepository
             return false;
         }
     }
+
+    /**
+     *
+     * Delete a Import log and all activities objects from database
+     * @param       importLog $importLog object
+     * @return      void
+     *
+     */
+    public function removeImportLog($importLog) {
+
+
+        $this->getEntityManager()->remove($importLog);
+        $this->getEntityManager()->flush();
+    }
 }

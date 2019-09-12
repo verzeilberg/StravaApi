@@ -87,52 +87,16 @@ $this->pageBreadcrumbs()->setItems([
 </div>
 <div class="row">
     <div class="col">
-        <canvas id="myChart" width="50%"></canvas>
-    </div>
-    <div class="col">
-        <canvas id="myChart2" width="50%"></canvas>
+        <canvas id="chart" width="100%"></canvas>
     </div>
 </div>
-
 <script>
 
-    var ctx = document.getElementById('myChart');
-    var mixedChart = new Chart(ctx, {
+    /* Chart with 2 y axes */
+    var canvas = document.getElementById('chart');
+    new Chart(canvas, {
         type: 'bar',
         data: {
-            datasets: [{
-                label: 'Gemiddelde tempo per km',
-                data: [
-                    <?php foreach($rounds AS $round) { ?>
-                    <?= $this->stravaViewHelper()->getAverageSpeedForChart($round->getAverageSpeed()); ?>,
-                    <?php } ?>
-                ],
-                backgroundColor: [
-                    <?php foreach($rounds AS $round) { ?>
-                    'rgba(222, 226, 230, 0.2)',
-                    <?php } ?>
-                ]
-            }, {
-                label: 'Gemiddelde tempo totaal',
-                data: [
-                    <?php foreach($rounds AS $round) { ?>
-                    <?= $this->stravaViewHelper()->getAverageSpeedForChart($activity->getAverageSpeed()); ?>,
-                    <?php } ?>
-                ],
-                borderWidth: 5,
-                backgroundColor: [
-                    <?php foreach($rounds AS $round) { ?>
-                    'rgba(222, 226, 230, 0)',
-                    <?php } ?>
-                ],
-                borderColor: [
-                    <?php foreach($rounds AS $round) { ?>
-                    'rgba(254, 0, 0, 0.2)',
-                    <?php } ?>
-                ],
-                // Changes this dataset to become a line
-                type: 'line'
-            }],
             labels: [
                 <?php $distance = 0; ?>
                 <?php foreach($rounds AS $round) {
@@ -140,7 +104,79 @@ $this->pageBreadcrumbs()->setItems([
                 ?>
                 "<?= $this->stravaViewHelper()->getDistance($distance); ?>",
                 <?php } ?>
-            ]
+            ],
+            datasets: [{
+                label: 'Gemiddelde tempo per km',
+                yAxisID: 'A',
+                data: [
+                    <?php foreach($rounds AS $round) { ?>
+                    <?= $this->stravaViewHelper()->getAverageSpeedForChart($round->getAverageSpeed()); ?>,
+                    <?php } ?>
+                ],
+                backgroundColor: [
+                    <?php foreach($rounds AS $round) { ?>
+                    'rgba(3, 201, 169, 0.8)',
+                    <?php } ?>
+                ]
+            },
+                {
+                    label: 'Gemiddelde tempo totaal',
+                    yAxisID: 'A',
+                    data: [
+                        <?php foreach($rounds AS $round) { ?>
+                        <?= $this->stravaViewHelper()->getAverageSpeedForChart($activity->getAverageSpeed()); ?>,
+                        <?php } ?>
+                    ],
+                    borderWidth: 5,
+                    backgroundColor: [
+                        <?php foreach($rounds AS $round) { ?>
+                        'rgba(255, 203, 5, 0)',
+                        <?php } ?>
+                    ],
+                    borderColor: [
+                        <?php foreach($rounds AS $round) { ?>
+                        'rgba(254, 0, 0, 0.8)',
+                        <?php } ?>
+                    ],
+                    // Changes this dataset to become a line
+                    type: 'line'
+                },
+                {
+                    label: 'Gemiddelde hartslag per km',
+                    yAxisID: 'B',
+                    data: [
+                        <?php foreach($rounds AS $round) { ?>
+                        <?= $round->getAverageHeartrate(); ?>,
+                        <?php } ?>
+                    ],
+                    backgroundColor: [
+                        <?php foreach($rounds AS $round) { ?>
+                        'rgba(255, 203, 5, 0.8)',
+                        <?php } ?>
+                    ]
+                },
+                {
+                    label: 'Gemiddelde hartslag totaal',
+                    yAxisID: 'B',
+                    data: [
+                        <?php foreach($rounds AS $round) { ?>
+                        <?= $activity->getAverageHeartrate(); ?>,
+                        <?php } ?>
+                    ],
+                    borderWidth: 5,
+                    backgroundColor: [
+                        <?php foreach($rounds AS $round) { ?>
+                        'rgba(222, 226, 230, 0)',
+                        <?php } ?>
+                    ],
+                    borderColor: [
+                        <?php foreach($rounds AS $round) { ?>
+                        'rgba(241, 90, 34, 0.8)',
+                        <?php } ?>
+                    ],
+                    // Changes this dataset to become a line
+                    type: 'line'
+                }]
         },
         options: {
             title: {
@@ -151,17 +187,35 @@ $this->pageBreadcrumbs()->setItems([
                 fontFamily: 'Arial, Verdana'
             },
             scales: {
-                yAxes: [{
-                    ticks: {
-                        beginAtZero: true,
-                        fontColor: "#CCC"
-                    },
-                    gridLines: {
-                        display: false,
-                        color: "#FFFFFF",
-                        fontColor: 'white',
-                    },
-                }],
+                yAxes: [
+                    {
+                        id: 'A',
+                        //type: 'linear',
+                        position: 'left',
+                        ticks: {
+                            beginAtZero: true,
+                            fontColor: "#CCC"
+                        },
+                        gridLines: {
+                            display: false,
+                            color: "#FFFFFF",
+                            fontColor: 'white'
+                        }
+                    }, {
+                        id: 'B',
+                        type: 'linear',
+                        position: 'right',
+                        ticks: {
+                            beginAtZero: true,
+                            fontColor: "#CCC"
+                        },
+                        gridLines: {
+                            display: false,
+                            color: "#FFFFFF",
+                            fontColor: 'white'
+                        }
+                    }
+                    ],
                 xAxes: [{
                     gridLines: {
                         display: false,
@@ -169,7 +223,7 @@ $this->pageBreadcrumbs()->setItems([
                         fontColor: 'white',
                     },
                     ticks: {
-                        fontColor: "#CCC"
+                        fontColor: "white"
                     },
                 }]
             },
@@ -179,96 +233,7 @@ $this->pageBreadcrumbs()->setItems([
                     fontColor: 'white',
                     defaultFontFamily: 'Arial, Verdana'
                 }
-            },
-
-        }
-    });
-
-    var ctx2 = document.getElementById('myChart2');
-    var mixedChart2 = new Chart(ctx2, {
-        type: 'bar',
-        data: {
-            datasets: [{
-                label: 'Gemiddelde hartslag per km',
-                data: [
-                    <?php foreach($rounds AS $round) { ?>
-                    <?= $round->getAverageHeartrate(); ?>,
-                    <?php } ?>
-                ],
-                backgroundColor: [
-                    <?php foreach($rounds AS $round) { ?>
-                    'rgba(222, 226, 230, 0.2)',
-                    <?php } ?>
-                ]
-            }, {
-                label: 'Gemiddelde hartslag totaal',
-                data: [
-                    <?php foreach($rounds AS $round) { ?>
-                    <?= $activity->getAverageHeartrate(); ?>,
-                    <?php } ?>
-                ],
-                borderWidth: 5,
-                backgroundColor: [
-                    <?php foreach($rounds AS $round) { ?>
-                    'rgba(222, 226, 230, 0)',
-                    <?php } ?>
-                ],
-                borderColor: [
-                    <?php foreach($rounds AS $round) { ?>
-                    'rgba(254, 0, 0, 0.2)',
-                    <?php } ?>
-                ],
-                // Changes this dataset to become a line
-                type: 'line'
-            }],
-            labels: [
-                <?php $distance = 0; ?>
-                <?php foreach($rounds AS $round) {
-                $distance = $distance + $round->getDistance();
-                ?>
-                "<?= $this->stravaViewHelper()->getDistance($distance); ?>",
-                <?php } ?>
-            ]
-        },
-        options: {
-            title: {
-                display: true,
-                text: 'Gemiddelde hartslag per km afgezet tegen totale gemiddelde hartslag',
-                fontSize: 16,
-                fontColor: 'white',
-                fontFamily: 'Arial, Verdana'
-            },
-            scales: {
-                yAxes: [{
-                    ticks: {
-                        beginAtZero: true,
-                        fontColor: "#CCC"
-                    },
-                    gridLines: {
-                        display: false,
-                        color: "#FFFFFF",
-                        fontColor: 'white',
-                    },
-                }],
-                xAxes: [{
-                    gridLines: {
-                        display: false,
-                        color: "#FFFFFF",
-                        fontColor: 'white',
-                    },
-                    ticks: {
-                        fontColor: "#CCC"
-                    },
-                }]
-            },
-            legend: {
-                labels: {
-                    // This more specific font property overrides the global property
-                    fontColor: 'white',
-                    defaultFontFamily: 'Arial, Verdana'
-                }
-            },
-
+            }
         }
     });
 
