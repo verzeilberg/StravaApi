@@ -28,3 +28,14 @@ i.brown{
 i.darkBlue {
     color: #0db520;
 }
+.clickableRow {
+    cursor: pointer;
+}
+
+#runningStats .row .col .card .card-header i {
+    font-size: 4rem;
+    color:#fff;
+}
+#runningStats .row .col .card .card-body h5 {
+    color:#fff;
+}

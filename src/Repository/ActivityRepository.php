@@ -17,6 +17,11 @@ class ActivityRepository extends EntityRepository
         return $this->findOneBy(['activityId' => $activityId], []);
     }
 
+    public function getAllActivities()
+    {
+        return $this->findBy([],['startDate' => 'DESC']);
+    }
+
     /*
      * Get total activites
      * @param $type type of activity (exampl. Run or Ride)
@@ -208,22 +213,8 @@ class ActivityRepository extends EntityRepository
             ->setParameter('endDate', $endDate->format('Y-m-d'))
             ->orderBy('a.startDate', 'ASC')
             ->getQuery()
-            ->getResult();
-        $data = [];
-        $data1 = [];
-        $data2 = [];
-        $labels = [];
-        $totalDistance = 0;
-        foreach($result AS $result) {
-            $labels[] = $result->getStartDate()->format('d-m-Y');
-            $data1[] = $this->getDistance($result->getDistance());
-            $totalDistance = $totalDistance + $this->getDistance($result->getDistance());
-            $data2[] = $totalDistance;
-        }
-
-        $data['kmPerActivity'] = $data1;
-        $data['kmActivityCumulatief'] = $data2;
-        $data['labels'] = $labels;
+            ->getArrayResult();
+        $data['activities'] = $result;
 
         return $data;
     }

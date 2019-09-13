@@ -69,8 +69,8 @@ class StravaApiHelper extends AbstractHelper
     }
 
     /*
- * Get hearthbeath
- */
+     * Get hearthbeath
+     */
     public function getHeartbeath($hearthBeath)
     {
         return number_format($hearthBeath, 0, ',', '');

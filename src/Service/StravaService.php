@@ -19,15 +19,15 @@ class StravaService implements StravaServiceInterface
     protected $athleteId;
     protected $activitiesPerPage;
     /*
-     * @ActivityRepository
+     * @var ActivityRepository
      */
     public $activityRepository;
     /*
-     * @RoundRepository
+     * @var RoundRepository
      */
     public $roundRepository;
     /*
-     * @ActivityImportLogRepository
+     * @var ActivityImportLogRepository
      */
     public $activityImportLogRepository;
 
@@ -45,32 +45,23 @@ class StravaService implements StravaServiceInterface
         $this->activityImportLogRepository = $activityImportLogRepository;
     }
 
-    ///-Strava Api client driven functions---------------------------------------------------------------------------///
-
     /*
      * Get athelete from client based on athleteId
-     *
      * @param $client
-     *
      * @return array
-     *
      */
     public function getAthlete($client)
     {
         return $client->getAthlete($this->athleteId);
     }
 
-
     /*
      * Get athelete activities from client
-     *
      * @param $client
      * @param $after select activities after a specific date
      * @param $page page you want to return
      * @param $per_page how many results per page
-     *
      * @return array
-     *
      */
     public function getAthleteActivities($client, $before = null, $after = null, $page = null, $per_page = null)
     {
@@ -79,11 +70,8 @@ class StravaService implements StravaServiceInterface
 
     /*
      * Get athelete stats from client based
-     *
      * @param $client
-     *
      * @return array
-     *
      */
     public function getAthleteStats($client)
     {
@@ -92,29 +80,22 @@ class StravaService implements StravaServiceInterface
 
     /*
      * Get specific activity based on activityId
-     *
      * @param $client
      * @param $activityId if of the activity
-     *
      * @return array
-     *
      */
     public function getActivity($client, $activityId = null)
     {
         return $client->getActivity($activityId);
     }
 
-
     /*
      * Get all activities from client
-     *
      * @param $client
      * @param $after select activities after a specific date
      * @param $page page you want to return
      * @param $per_page how many results per page
-     *
      * @return array
-     *
      */
     public function getAllActivities($client, $before = null, $after = null, $page = null, $per_page = null)
     {
@@ -140,9 +121,6 @@ class StravaService implements StravaServiceInterface
         }
         return $allActivities;
     }
-
-
-    ///-Database driven functions------------------------------------------------------------------------------------///
 
     /*
      *
@@ -185,9 +163,7 @@ class StravaService implements StravaServiceInterface
         $activity->setDescription($activityArr["description"]);
         $activity->setWorkoutType($activityArr["workout_type"]);
         $activity->setActivityImportLog($importLog);
-
         $activity = $this->activityRepository->storeActivity($activity);
-
         if (is_object($activity)) {
             return $this->setNewRounds($activityArr["splits_metric"], $activity);
         } else {
@@ -197,7 +173,6 @@ class StravaService implements StravaServiceInterface
 
     /*
      * Set data to existing activity
-     *
      * @param       activity $activity object
      * @param       currentUser $currentUser whos is logged on
      * @return      void
@@ -260,31 +235,51 @@ class StravaService implements StravaServiceInterface
         return $paginator;
     }
 
+    /**
+     *
+     * Get start and enddate based on given year and/or month
+     * @var $year year
+     * @var $month month
+     *
+     * @return array
+     *
+     */
     public function getStartAndEndDateByMonthAndYear($year = null, $month = null)
     {
-
-        if ($year === null) {
+        if ($year == null) {
             $year = new \DateTime('now');
             $startDate = new \DateTime($year->format('Y') . '-' . $month . '-01');
             $endDate = clone $startDate;
-        } else if ($month === null) {
-            $month = new \DateTime('now');
-            $startDate = new \DateTime($year . '-' . $month->format('m') . '-01');
-            $endDate = clone $startDate;
+        } else if ($month == null) {
+            $startDate = new \DateTime($year . '-01-01');
+            $endDate = new \DateTime($year . '-12-01');
         } else {
             $startDate = new \DateTime($year . '-' . $month . '-01');
             $endDate = clone $startDate;
         }
-
         $startDate->modify('first day of this month');
         $endDate->modify('last day of this month');
-
         return [
             'startDate' => $startDate,
             'endDate' => $endDate
         ];
     }
 
-
-
+    public function getMonths()
+    {
+        return [
+            1 => 'Januari',
+            2 => 'Februari',
+            3 => 'Maart',
+            4 => 'April',
+            5 => 'Mei',
+            6 => 'Juni',
+            7 => 'Juli',
+            8 => 'Augustus',
+            9 => 'September',
+            10 => 'Oktober',
+            11 => 'November',
+            12 => 'December'
+        ];
+    }
 }

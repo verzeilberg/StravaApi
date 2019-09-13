@@ -12,11 +12,13 @@ return [
             Controller\StravaController::class => Controller\Factory\StravaControllerFactory::class,
             Controller\StravaImportController::class => Controller\Factory\StravaImportControllerFactory::class,
             Controller\StravaLogController::class => Controller\Factory\StravaLogControllerFactory::class,
+            Controller\IndexController::class => Controller\Factory\IndexControllerFactory::class
         ],
         'aliases' => [
             'stravabeheer' => Controller\StravaController::class,
             'stravaimportbeheer' => Controller\StravaImportController::class,
-            'stravalogbeheer' => Controller\StravaLogController::class
+            'stravalogbeheer' => Controller\StravaLogController::class,
+            'stravaindex' => Controller\StravaLogController::class
         ],
     ],
     'service_manager' => [
@@ -80,11 +82,28 @@ return [
                     ],
                 ],
             ],
+            'runningStats' => [
+                'type' => Segment::class,
+                'options' => [
+                    'route' => '/running-stats[/:action][/:id]',
+                    'constraints' => [
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id' => '[0-9]+',
+                    ],
+                    'defaults' => [
+                        'controller' => Controller\IndexController::class,
+                        'action' => 'index',
+                    ],
+                ],
+            ],
         ],
     ],
     // The 'access_filter' key is used by the User module to restrict or permit
     // access to certain controller actions for unauthorized visitors.
     'access_filter' => [
+        'options' => [
+            'mode' => 'restrictive'
+        ],
         'controllers' => [
             'stravabeheer' => [
                 // to anyone.
@@ -97,6 +116,10 @@ return [
             'stravalogbeheer' => [
                 // to anyone.
                 ['actions' => '*', 'allow' => '+strava.manage']
+            ],
+            Controller\IndexController::class => [
+                // to anyone.
+                ['actions' => '*', 'allow' => '*']
             ],
         ]
     ],

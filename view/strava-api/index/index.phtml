@@ -1,0 +1,145 @@
+<?php
+$this->headTitle('Running stats');
+$this->mainMenu()->setActiveItemId('runningStats');
+$this->pageBreadcrumbs()->setItems([
+    'Home' => $this->url('home'),
+    'Running stats' => $this->url('runningStats'),
+]);
+?>
+<!-- Page Header -->
+<header class="masthead" style="background-image: url('img/bg.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-md-10 mx-auto">
+                <div class="site-heading">
+                    <h1 class="index-title">Running stats</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+<!-- Breadcrumbs -->
+<?= $this->pageBreadcrumbs()->render(); ?>
+<!-- Main Content -->
+<div class="container" id="runningStats">
+
+    <div class="row">
+        <div class="col-sm-12 col-md-12 col-lg-12">
+            <form id="selectYear" method="post" class="bg-dark pt-1 pb-1">
+                <div class="row mt-2 mb-2">
+                    <div class="col text-right">
+                        <label class="col-form-label sr-only" for="year">Jaar</label>
+                    </div>
+                    <div class="col-4">
+                        <select name="year" id="year" class="form-control form-control-sm">
+                            <?php foreach ($years AS $year) { ?>
+                                <option <?= ($currentYear == $year['jaar'] ? 'selected' : '') ?>
+                                        value="<?= $year['jaar'] ?>"><?= $year['jaar']; ?></option>
+                            <?php } ?>
+                        </select>
+                    </div>
+                    <div class="col-4">
+                        <select name="month" id="month" class="form-control form-control-sm">
+                            <option <?= ($currentMonth == '' ? 'selected' : '') ?> value="">Alle maanden</option>
+                            <?php foreach ($months AS $index => $month) { ?>
+                                <option <?= ($currentMonth == $index ? 'selected' : '') ?>
+                                        value="<?= $index ?>"><?= $month; ?></option>
+                            <?php } ?>
+                        </select>
+                    </div>
+                    <div class="col text-left">
+                        <label class="col-form-label sr-only" for="category">Maand</label>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col text-center">
+            <canvas id="myChart" width="20%"></canvas>
+        </div>
+    </div>
+    <div class="row mb-1">
+        <div class="col mb-2">
+            <div class="card bg-success">
+                <div class="card-header text-center">
+                    <i class="fa fa-running"></i>
+                </div>
+                <div class="card-body">
+                    <h5 id="totalRunActivities" class="card-title text-center"></h5>
+                </div>
+            </div>
+        </div>
+        <div class="col mb-2">
+            <div class="card bg-warning">
+                <div class="card-header text-center">
+                    <i class="fas fa-tachometer-alt"></i>
+                </div>
+                <div class="card-body">
+                    <h5 id="totalAverageSpeed" class="card-title text-center"></h5>
+                </div>
+            </div>
+        </div>
+        <div class="col mb-2">
+            <div class="card bg-secondary">
+                <div class="card-header text-center">
+                    <i class="fas fa-road"></i>
+                </div>
+                <div class="card-body">
+                    <h5 id="totalDistance" class="card-title text-center"></h5>
+                </div>
+            </div>
+        </div>
+        <div class="col mb-2">
+            <div class="card bg-dark">
+                <div class="card-header text-center">
+                    <i class="fas fa-stopwatch"></i>
+                </div>
+                <div class="card-body">
+                    <h5 id="totalMovingTime" class="card-title text-center"></h5>
+                </div>
+            </div>
+        </div>
+        <div class="col mb-2">
+            <div class="card bg-info">
+                <div class="card-header text-center">
+                    <i class="fas fa-mountain"></i>
+                </div>
+                <div class="card-body">
+                    <h5 id="totalAverageElevationGain" class="card-title text-center"></h5>
+                </div>
+            </div>
+        </div>
+        <div class="col mb-2">
+            <div class="card bg-danger">
+                <div class="card-header text-center">
+                    <i class="fas fa-heartbeat"></i>
+                </div>
+                <div class="card-body">
+                    <h5 id="totalAverageHearthBeat" class="card-title text-center"></h5>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <table id="activityTable" class="table table-secondary table-sm table-bordered table-hover table-striped">
+                <thead class="thead-dark">
+                <tr>
+                    <th class="text-center"><i class="fas fa-flag-checkered"> / <i class="fas fa-dumbbell"></i></th>
+                    <th>Datum</th>
+                    <th>Naam</th>
+                    <th>Afstand</th>
+                    <th>Tempo /km</th>
+                    <th>Beweegtijd</th>
+                    <th>Gem. hartslag</th>
+                    <th>Hoogteverschil</th>
+                </tr>
+                </thead>
+                <tbody id="result">
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>

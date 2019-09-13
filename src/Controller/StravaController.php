@@ -10,12 +10,12 @@ use Polyline;
 class StravaController extends AbstractActionController
 {
     /*
-     * @HelperPluginManager
+     * @var HelperPluginManager
      */
     protected $viewhelpermanager;
 
     /*
-     * @ StravaService
+     * @var StravaService
      */
     protected $stravaService;
 
@@ -40,6 +40,8 @@ class StravaController extends AbstractActionController
     {
         $this->layout('layout/beheer');
         $this->viewhelpermanager->get('headLink')->appendStylesheet('/css/strava_style.css');
+        $this->viewhelpermanager->get('headLink')->appendStylesheet('https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.css');
+        $this->viewhelpermanager->get('headScript')->appendFile('https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.min.js');
         //All data
         $totalRunActivities = $this->stravaService->activityRepository->getTotalActivities('Run');
         $totalRunDistance = $this->stravaService->activityRepository->getTotalDistance('Run');
@@ -56,6 +58,7 @@ class StravaController extends AbstractActionController
         $fastestTrainingRound = $this->stravaService->roundRepository->getFastestRound('Run', 3);
         $longestTrainingActivity = $this->stravaService->activityRepository->getLongestActivity('Run', 3);
 
+        $activities = $this->stravaService->activityRepository->getAllActivities();
 
         return [
             'totalRunActivities' => $totalRunActivities,
@@ -69,7 +72,8 @@ class StravaController extends AbstractActionController
             'fastestRound' => $fastestRound,
             'fastestTrainingActivity' => $fastestTrainingActivity,
             'fastestTrainingRound' => $fastestTrainingRound,
-            'longestTrainingActivity' => $longestTrainingActivity
+            'longestTrainingActivity' => $longestTrainingActivity,
+            'activities' => $activities
         ];
     }
 

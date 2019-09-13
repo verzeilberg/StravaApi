@@ -6,113 +6,193 @@ $this->pageBreadcrumbs()->setItems([
     'Strava' => $this->url('strava'),
 ]);
 ?>
-    <!-- Page Header -->
-    <div class="row">
-        <h1 class="col">STRAVA BEHEER</h1>
+<!-- Page Header -->
+<div class="row">
+    <h1 class="col">STRAVA BEHEER</h1>
+</div>
+<!-- Breadcrumbs -->
+<div class="row">
+    <div class="col">
+        <?= $this->pageBreadcrumbs()->render(); ?>
     </div>
-    <!-- Breadcrumbs -->
-    <div class="row">
-        <div class="col">
-            <?= $this->pageBreadcrumbs()->render(); ?>
-        </div>
-    </div>
-    <div id="stravaOverview" class="row">
-        <div class="col">
-            <div class="card bg-success">
-                <div class="card-header text-center">
-                    <i class="fa fa-running"></i>
-                    <h5 class="card-title text-center mt-2">Totaal activiteiten</h5>
-                </div>
-                <div class="card-body">
-                    <h5 class="card-title text-center"><?= $totalRunActivities ?></h5>
-                </div>
+</div>
+<div id="stravaOverview" class="row">
+    <div class="col">
+        <div class="card bg-success">
+            <div class="card-header text-center">
+                <i class="fa fa-running"></i>
+                <h5 class="card-title text-center mt-2">Totaal activiteiten</h5>
             </div>
-        </div>
-        <div class="col">
-            <div class="card bg-warning">
-                <div class="card-header text-center">
-                    <i class="fas fa-tachometer-alt"></i>
-                    <h5 class="card-title text-center mt-2">Gemiddelde tempo</h5>
-                </div>
-                <div class="card-body">
-                    <h5 class="card-title text-center">
-                        <?= $this->stravaViewHelper()->getAverageSpeed($averageSpeed) ?>
-                    </h5>
-                </div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="card bg-secondary">
-                <div class="card-header text-center">
-                    <i class="fas fa-road"></i>
-                    <h5 class="card-title text-center mt-2">Totaal km's</h5>
-                </div>
-                <div class="card-body">
-                    <h5 class="card-title text-center">
-                        <?= $this->stravaViewHelper()->getDistance($totalRunDistance) ?> km
-                    </h5>
-                </div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="card bg-secondary">
-                <div class="card-header text-center">
-                    <i class="fas fa-stopwatch"></i>
-                    <h5 class="card-title text-center mt-2">Totaal tijd</h5>
-                </div>
-                <div class="card-body">
-                    <h5 class="card-title text-center">
-                        <?= $this->stravaViewHelper()->getTotalMovingTime($totalRunTime); ?>
-                    </h5>
-                </div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="card bg-info">
-                <div class="card-header text-center">
-                    <i class="fas fa-mountain"></i>
-                    <h5 class="card-title text-center mt-2">Gemid. hoogteverschil</h5>
-                </div>
-                <div class="card-body">
-                    <h5 class="card-title text-center">
-                        <?= $this->stravaViewHelper()->getTotalElevationGain($averageElevation); ?>
-                    </h5>
-                </div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="card bg-danger">
-                <div class="card-header text-center">
-                    <i class="fas fa-heartbeat"></i>
-                    <h5 class="card-title text-center mt-2">Gemiddelde hartslag</h5>
-                </div>
-                <div class="card-body">
-                    <h5 class="card-title text-center">
-                        <?= $this->stravaViewHelper()->getTotalElevationGain($averageHeartbeat); ?>
-                    </h5>
-                </div>
+            <div class="card-body">
+                <h5 class="card-title text-center"><?= $totalRunActivities ?></h5>
             </div>
         </div>
     </div>
+    <div class="col">
+        <div class="card bg-warning">
+            <div class="card-header text-center">
+                <i class="fas fa-tachometer-alt"></i>
+                <h5 class="card-title text-center mt-2">Gemiddelde tempo</h5>
+            </div>
+            <div class="card-body">
+                <h5 class="card-title text-center">
+                    <?= $this->stravaViewHelper()->getAverageSpeed($averageSpeed) ?>
+                </h5>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="card bg-secondary">
+            <div class="card-header text-center">
+                <i class="fas fa-road"></i>
+                <h5 class="card-title text-center mt-2">Totaal km's</h5>
+            </div>
+            <div class="card-body">
+                <h5 class="card-title text-center">
+                    <?= $this->stravaViewHelper()->getDistance($totalRunDistance) ?> km
+                </h5>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="card bg-secondary">
+            <div class="card-header text-center">
+                <i class="fas fa-stopwatch"></i>
+                <h5 class="card-title text-center mt-2">Totaal tijd</h5>
+            </div>
+            <div class="card-body">
+                <h5 class="card-title text-center">
+                    <?= $this->stravaViewHelper()->getTotalMovingTime($totalRunTime); ?>
+                </h5>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="card bg-info">
+            <div class="card-header text-center">
+                <i class="fas fa-mountain"></i>
+                <h5 class="card-title text-center mt-2">Gemid. hoogteverschil</h5>
+            </div>
+            <div class="card-body">
+                <h5 class="card-title text-center">
+                    <?= $this->stravaViewHelper()->getTotalElevationGain($averageElevation); ?>
+                </h5>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="card bg-danger">
+            <div class="card-header text-center">
+                <i class="fas fa-heartbeat"></i>
+                <h5 class="card-title text-center mt-2">Gemiddelde hartslag</h5>
+            </div>
+            <div class="card-body">
+                <h5 class="card-title text-center">
+                    <?= $this->stravaViewHelper()->getTotalElevationGain($averageHeartbeat); ?>
+                </h5>
+            </div>
+        </div>
+    </div>
+</div>
 <?php
 /*
  * Partial for fastest competition run, round and longest run
  */
 echo $this->partial('strava-api/partial/competition-stats.phtml',
-                        [
-                            'fastestActivity' => $fastestActivity,
-                            'longestActivity' => $longestActivity,
-                            'fastestRound' => $fastestRound
-                        ]
-                    );
+    [
+        'fastestActivity' => $fastestActivity,
+        'longestActivity' => $longestActivity,
+        'fastestRound' => $fastestRound
+    ]
+);
 /*
  * Partial for fastest training run, round and longest run
  */
 echo $this->partial('strava-api/partial/training-stats.phtml',
-                        [
-                        'fastestActivity' => $fastestTrainingActivity,
-                        'longestActivity' => $longestTrainingActivity,
-                        'fastestRound' => $fastestTrainingRound
-                        ]
-                    );
+    [
+        'fastestActivity' => $fastestTrainingActivity,
+        'longestActivity' => $longestTrainingActivity,
+        'fastestRound' => $fastestTrainingRound
+    ]
+);
 ?>
+<div class="row">
+    <div class="col">
+        <canvas id="chart"></canvas>
+    </div>
+</div>
+<script>
+    /* Chatter chart */
+    var canvas = document.getElementById('chart');
+    var scatterChart = new Chart(canvas, {
+        type: 'scatter',
+        data: {
+            labels: [
+                <?php foreach($activities AS $activity) { ?>
+                "<?= $activity->getName(); ?> (<?= $activity->getStartDate()->format('d-m-Y') ?>)",
+                <?php } ?>
+            ],
+            datasets: [{
+                label: 'Scatter Dataset',
+                data: [
+                    <?php foreach($activities AS $activity) { ?>
+                    {
+                        x: <?= $this->stravaViewHelper()->getDistance($activity->getDistance()) ?>,
+                        y: <?= $this->stravaViewHelper()->getAverageSpeedForChart($activity->getAverageSpeed()); ?>
+                    },
+                    <?php } ?>
+                ],
+                fill: false,
+                pointHoverRadius: 5,
+                pointHoverBackgroundColor: 'red',
+                backgroundColor: '#FFF'
+            }]
+        },
+        options: {
+            tooltips: {
+                callbacks: {
+                    label: function(tooltipItem, data) {
+                        var label = data.labels[tooltipItem.index];
+
+                        console.log(data);
+
+                        return label + ': (' + tooltipItem.xLabel + ', ' + tooltipItem.yLabel + ')';
+                    }
+                }
+            },
+            title: {
+                display: true,
+                text: 'Gemiddelde tempo per activiteit',
+                fontSize: 16,
+                fontColor: 'white',
+                fontFamily: 'Arial, Verdana'
+            },
+            scales: {
+                xAxes: [{
+                    type: 'linear',
+                    position: 'bottom',
+                    ticks: {
+                        fontColor: "#FFF"
+                    },
+                    gridLines: {
+                        display: false,
+                        color: "#FFFFFF",
+                        fontColor: 'white'
+                    }
+                }],
+                yAxes: [{
+                    type: 'linear',
+                    position: 'bottom',
+                    ticks: {
+                        fontColor: "#FFF"
+                    },
+                    gridLines: {
+                        display: false,
+                        color: "#FFFFFF",
+                        fontColor: 'white'
+                    }
+                }]
+            }
+        }
+    });
+</script>
