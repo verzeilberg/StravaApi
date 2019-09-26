@@ -2,10 +2,16 @@
 
 namespace StravaApi\Service;
 
+use Doctrine\ORM\OptimisticLockException;
+use Exception;
+use StravaApi\Entity\Activity;
+use User\View\Helper\CurrentUser;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as DoctrineAdapter;
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
 use Zend\Paginator\Paginator;
+use Polyline;
+
 /*
  * Repositories
  */
@@ -45,8 +51,8 @@ class StravaService implements StravaServiceInterface
         $this->activityImportLogRepository = $activityImportLogRepository;
     }
 
-    /*
-     * Get athelete from client based on athleteId
+    /**
+     * Get athlete from client based on athleteId
      * @param $client
      * @return array
      */
@@ -55,8 +61,8 @@ class StravaService implements StravaServiceInterface
         return $client->getAthlete($this->athleteId);
     }
 
-    /*
-     * Get athelete activities from client
+    /**
+     * Get athlete activities from client
      * @param $client
      * @param $after select activities after a specific date
      * @param $page page you want to return
@@ -68,8 +74,8 @@ class StravaService implements StravaServiceInterface
         return $client->getAthleteActivities($before, $after, $page, $per_page);
     }
 
-    /*
-     * Get athelete stats from client based
+    /**
+     * Get athlete stats from client based
      * @param $client
      * @return array
      */
@@ -78,7 +84,7 @@ class StravaService implements StravaServiceInterface
         return $client->getAthleteStats($this->athleteId);
     }
 
-    /*
+    /**
      * Get specific activity based on activityId
      * @param $client
      * @param $activityId if of the activity
@@ -89,7 +95,7 @@ class StravaService implements StravaServiceInterface
         return $client->getActivity($activityId);
     }
 
-    /*
+    /**
      * Get all activities from client
      * @param $client
      * @param $after select activities after a specific date
@@ -122,20 +128,78 @@ class StravaService implements StravaServiceInterface
         return $allActivities;
     }
 
-    /*
-     *
+    /**
      * Set data to new activity
-     *
-     * @param       activity $activity object
-     * @param       currentUser $currentUser whos is logged on
+     * @param $activityArr
+     * @param $importLog
+     * @param currentUser $currentUser whos is logged on
      * @return      void
-     *
+     * @throws OptimisticLockException
      */
-    public function setNewActivity($activityArr, $importLog, $currentUser = null)
+    public function newActivity($activityArr, $importLog, $currentUser = null)
     {
         $activity = $this->activityRepository->createActivity();
         $activity->setDateCreated(new \DateTime());
         $activity->setCreatedBy($currentUser);
+        $activity = $this->setActivity($activityArr, $activity);
+        $activity->setActivityImportLog($importLog);
+        $activity = $this->activityRepository->storeActivity($activity);
+        if (is_object($activity)) {
+            return $this->setNewRounds($activityArr["splits_metric"], $activity);
+        } else {
+            return $activity;
+        }
+    }
+
+    /**
+     * Update data to new activity
+     * @param $activityArr
+     * @param $activityId
+     * @param currentUser $currentUser whos is logged on
+     * @return      void
+     * @throws OptimisticLockException
+     */
+    public function updateActivity($activityArr, $activityId, $currentUser = null)
+    {
+        $activity = $this->activityRepository->findOneBy(['id' => $activityId]);
+        $activity->setDateChanged(new \DateTime());
+        $activity->setChangedBy($currentUser);
+        $activity = $this->setActivity($activityArr, $activity);
+        $activity = $this->activityRepository->storeActivity($activity);
+        //First remove existing rounds from database
+        $rounds = $activity->getRounds();
+        $this->removeRounds($rounds);
+        if (is_object($activity)) {
+            return $this->setNewRounds($activityArr["splits_metric"], $activity);
+        } else {
+            return $activity;
+        }
+    }
+
+    /**
+     * Set data to existing activity
+     * @param activity $activity object
+     * @param currentUser $currentUser who is logged on
+     * @return      void
+     * @throws Exception
+     */
+    public function setExistingActivity($activity, $currentUser)
+    {
+        $activity->setDateChanged(new \DateTime());
+        $activity->setChangedBy($currentUser);
+        $this->activityRepository->storeActivity($activity);
+    }
+
+
+    /**
+     * Set data to existing activity object
+     * @param array $activityArr
+     * @param object $activity
+     * @return activity object
+     * @throws Exception
+     */
+    private function setActivity($activityArr, $activity)
+    {
         $activity->setActivityId((int)$activityArr['id']);
         $activity->setAthleteId($activityArr["athlete"]["id"]);
         $activity->setName($activityArr["name"]);
@@ -162,35 +226,18 @@ class StravaService implements StravaServiceInterface
         $activity->setElevLow($activityArr["elev_low"]);
         $activity->setDescription($activityArr["description"]);
         $activity->setWorkoutType($activityArr["workout_type"]);
-        $activity->setActivityImportLog($importLog);
-        $activity = $this->activityRepository->storeActivity($activity);
-        if (is_object($activity)) {
-            return $this->setNewRounds($activityArr["splits_metric"], $activity);
-        } else {
-            return $activity;
-        }
+
+        return $activity;
     }
 
-    /*
-     * Set data to existing activity
-     * @param       activity $activity object
-     * @param       currentUser $currentUser whos is logged on
-     * @return      void
-     */
-    public function setExistingActivity($activity, $currentUser)
-    {
-        $activity->setDateChanged(new \DateTime());
-        $activity->setChangedBy($currentUser);
-        $this->activityRepository->storeActivity($activity);
-    }
-
-    /*
+    /**
      * Save rounds to db
+     * @return      boolean
+     * @throws OptimisticLockException
      * @var $rounds array with rounds
      * @var activity to connect rounds to
-     * @return      boolean
      */
-    public function setNewRounds($rounds, $activity)
+    private function setNewRounds($rounds, $activity)
     {
         $result = true;
         if (count($rounds) > 0) {
@@ -217,14 +264,31 @@ class StravaService implements StravaServiceInterface
     }
 
     /**
-     *
-     * Get array of activities  for pagination
-     * @var $query query
-     * @var $currentPage current page
-     * @var $itemsPerPage items on a page
-     *
-     * @return array
-     *
+     * Remove rounds from db
+     * @return      boolean
+     * @throws OptimisticLockException
+     * @var $rounds array with round objects
+     */
+    private function removeRounds($rounds)
+    {
+        $result = true;
+        if (count($rounds) > 0) {
+            foreach ($rounds AS $round) {
+                $result = $this->roundRepository->removeRound($round);
+                if ($result == false) {
+                    break;
+                }
+            }
+        }
+        return $result;
+    }
+
+    /**
+     * Get array of activities for pagination
+     * @param string $query
+     * @param int $currentPage
+     * @param int $itemsPerPage
+     * @return Paginator
      */
     public function getItemsForPagination($query, $currentPage = 1, $itemsPerPage = 10)
     {
@@ -236,13 +300,11 @@ class StravaService implements StravaServiceInterface
     }
 
     /**
-     *
-     * Get start and enddate based on given year and/or month
+     * Get start and end date based on given year and/or month
+     * @return array
+     * @throws Exception
      * @var $year year
      * @var $month month
-     *
-     * @return array
-     *
      */
     public function getStartAndEndDateByMonthAndYear($year = null, $month = null)
     {
@@ -265,6 +327,21 @@ class StravaService implements StravaServiceInterface
         ];
     }
 
+    /**
+     * Decode a summary poly line to points
+     * @param $summaryPolyLine
+     * @return array
+     */
+    public function getPolyLinePoints($summaryPolyLine)
+    {
+        $points = Polyline::decode($summaryPolyLine);
+        return Polyline::pair($points);
+    }
+
+    /**
+     * Returns an array of months
+     * @return array
+     */
     public function getMonths()
     {
         return [

@@ -26,6 +26,9 @@ class StravaOAuthService implements StravaOAuthServiceInterface
 
     }
 
+    /**
+     * Set options into class objects
+     */
     private function setOptions()
     {
         $this->clientId = $this->config['stravaSettings']['clientId'];
@@ -33,6 +36,9 @@ class StravaOAuthService implements StravaOAuthServiceInterface
         $this->redirectUri = $this->config['stravaSettings']['redirectUri'];
     }
 
+    /**
+     * Initialise Oath client
+     */
     private function initialiseOath()
     {
         $options = [
@@ -45,34 +51,11 @@ class StravaOAuthService implements StravaOAuthServiceInterface
 
     }
 
-
-    public function getAuthorisationLink()
-    {
-
-        $authoraisationLink = $this->oauth->getAuthorizationUrl([
-            // Uncomment required scopes.
-            'scope' => [
-                'public',
-                // 'write',
-                // 'view_private',
-            ]
-        ]);
-
-        return $authoraisationLink;
-    }
-
-    public function initialiseClient($code)
-    {
-        $token = $this->oauth->getAccessToken('authorization_code', [
-            'code' => $code
-        ]);
-        $accessToken = $token->getToken();
-        return $this->setClient($accessToken);
-
-
-    }
-
-    public function setClient($accessToken = null)
+    /**
+     * Set client with acces token
+     * @param null $accessToken
+     */
+    private function setClient($accessToken = null)
     {
         try {
             $adapter = new \GuzzleHttp\Client(['base_uri' => 'https://www.strava.com/api/v3/']);
@@ -85,6 +68,44 @@ class StravaOAuthService implements StravaOAuthServiceInterface
         }
     }
 
+    /**
+     * Get authorisation link to oauth Strava client
+     * @return mixed
+     */
+    public function getAuthorisationLink()
+    {
+
+        $authoraisationLink = $this->oauth->getAuthorizationUrl([
+            'scope' => [
+                'public',
+                // 'write',
+                // 'view_private',
+            ]
+        ]);
+
+        return $authoraisationLink;
+    }
+
+    /**
+     * Initialise Strava client
+     * @param $code code to initialise Strava client
+     * @return bool|void
+     */
+    public function initialiseClient($code)
+    {
+        $token = $this->oauth->getAccessToken('authorization_code', [
+            'code' => $code
+        ]);
+        $accessToken = $token->getToken();
+        return $this->setClient($accessToken);
+
+
+    }
+
+    /**
+     * Get Strava client
+     * @return mixed
+     */
     public function getClient()
     {
         return $this->client;

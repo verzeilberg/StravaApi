@@ -118,7 +118,9 @@ echo $this->partial('strava-api/partial/training-stats.phtml',
 ?>
 <div class="row">
     <div class="col">
-        <canvas id="chart"></canvas>
+        <div class="chart-container" style="position: relative; height:40vh; width:80vw">
+            <canvas id="chart"></canvas>
+        </div>
     </div>
 </div>
 <script>
@@ -142,9 +144,18 @@ echo $this->partial('strava-api/partial/training-stats.phtml',
                     },
                     <?php } ?>
                 ],
+                pointBackgroundColor: [
+                    <?php foreach($activities AS $activity) { ?>
+                    '#'+Math.floor(Math.random()*16777215).toString(16),
+                    <?php } ?>
+                ],
+                pointHoverBackgroundColor: [
+                    <?php foreach($activities AS $activity) { ?>
+                    '#'+Math.floor(Math.random()*16777215).toString(16),
+                    <?php } ?>
+                ],
                 fill: false,
                 pointHoverRadius: 5,
-                pointHoverBackgroundColor: 'red',
                 backgroundColor: '#FFF'
             }]
         },
@@ -153,9 +164,6 @@ echo $this->partial('strava-api/partial/training-stats.phtml',
                 callbacks: {
                     label: function(tooltipItem, data) {
                         var label = data.labels[tooltipItem.index];
-
-                        console.log(data);
-
                         return label + ': (' + tooltipItem.xLabel + ', ' + tooltipItem.yLabel + ')';
                     }
                 }
@@ -194,5 +202,32 @@ echo $this->partial('strava-api/partial/training-stats.phtml',
                 }]
             }
         }
+    });
+
+    /*
+     * Function to resize above div of scatter chart so the page fits well
+     */
+    function resizeScatterWindow()
+    {
+        $('.chart-container').height(scatterChart.chartArea.bottom + 25);
+    }
+
+    /*
+     * Init function on page load
+     */
+    resizeScatterWindow();
+
+
+    $(window).resize(function() {
+        if(this.resizeTO) clearTimeout(this.resizeTO);
+        this.resizeTO = setTimeout(function() {
+            $(this).trigger('resizeEnd');
+        }, 500);
+    });
+    /*
+     * Init function on page resize
+     */
+    $(window).bind('resizeEnd', function() {
+        resizeScatterWindow();
     });
 </script>

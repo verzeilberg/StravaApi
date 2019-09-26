@@ -18,7 +18,7 @@ return [
             'stravabeheer' => Controller\StravaController::class,
             'stravaimportbeheer' => Controller\StravaImportController::class,
             'stravalogbeheer' => Controller\StravaLogController::class,
-            'stravaindex' => Controller\StravaLogController::class
+            'stravaindex' => Controller\IndexController::class
         ],
     ],
     'service_manager' => [
@@ -49,7 +49,7 @@ return [
                         'id' => '[0-9]+',
                     ],
                     'defaults' => [
-                        'controller' => Controller\StravaController::class,
+                        'controller' => 'stravabeheer',
                         'action' => 'index',
                     ],
                 ],
@@ -63,7 +63,7 @@ return [
                         'id' => '[0-9]+',
                     ],
                     'defaults' => [
-                        'controller' => Controller\StravaImportController::class,
+                        'controller' => 'stravaimportbeheer',
                         'action' => 'index',
                     ],
                 ],
@@ -77,7 +77,7 @@ return [
                         'id' => '[0-9]+',
                     ],
                     'defaults' => [
-                        'controller' => Controller\StravaLogController::class,
+                        'controller' => 'stravalogbeheer',
                         'action' => 'index',
                     ],
                 ],
@@ -91,7 +91,7 @@ return [
                         'id' => '[0-9]+',
                     ],
                     'defaults' => [
-                        'controller' => Controller\IndexController::class,
+                        'controller' => 'stravaindex',
                         'action' => 'index',
                     ],
                 ],
@@ -106,19 +106,15 @@ return [
         ],
         'controllers' => [
             'stravabeheer' => [
-                // to anyone.
                 ['actions' => '*', 'allow' => '+strava.manage']
             ],
             'stravaimportbeheer' => [
-                // to anyone.
                 ['actions' => '*', 'allow' => '+strava.manage']
             ],
             'stravalogbeheer' => [
-                // to anyone.
                 ['actions' => '*', 'allow' => '+strava.manage']
             ],
-            Controller\IndexController::class => [
-                // to anyone.
+            'stravaindex' => [
                 ['actions' => '*', 'allow' => '*']
             ],
         ]

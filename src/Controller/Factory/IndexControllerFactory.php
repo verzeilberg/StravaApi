@@ -11,7 +11,7 @@ use StravaApi\Service\StravaService;
 use Zend\ServiceManager\Factory\FactoryInterface;
 
 /**
- * This is the factory for StravaLogController. Its purpose is to instantiate the controller
+ * This is the factory for IndexController. Its purpose is to instantiate the controller
  * and inject dependencies into its constructor.
  */
 class IndexControllerFactory implements FactoryInterface {

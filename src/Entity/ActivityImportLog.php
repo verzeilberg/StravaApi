@@ -17,18 +17,20 @@ class ActivityImportLog extends UnityOfWork {
      * @ORM\Id
      * @ORM\Column(name="id", type="integer", length=11)
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @var integer
      */
     protected $id;
 
     /**
      * @ORM\Column(name="import_date", type="datetime", nullable=false)
+     * @var datetime
      */
     protected $importDate;
 
     /**
      * One activity import log has many activities. This is the inverse side.
      * @ORM\OneToMany(targetEntity="Activity", mappedBy="activityImportLog", orphanRemoval=true, cascade={"persist", "remove"})
-     *
+     * @var object
      */
     private $activities;
 
@@ -37,7 +39,7 @@ class ActivityImportLog extends UnityOfWork {
     }
 
     /**
-     * @return mixed
+     * @return int
      */
     public function getId()
     {
@@ -45,15 +47,17 @@ class ActivityImportLog extends UnityOfWork {
     }
 
     /**
-     * @param mixed $id
+     * @param int $id
+     * @return ActivityImportLog
      */
     public function setId($id)
     {
         $this->id = $id;
+        return $this;
     }
 
     /**
-     * @return mixed
+     * @return datetime
      */
     public function getImportDate()
     {
@@ -61,15 +65,17 @@ class ActivityImportLog extends UnityOfWork {
     }
 
     /**
-     * @param mixed $importDate
+     * @param datetime $importDate
+     * @return ActivityImportLog
      */
     public function setImportDate($importDate)
     {
         $this->importDate = $importDate;
+        return $this;
     }
 
     /**
-     * @return mixed
+     * @return object
      */
     public function getActivities()
     {
@@ -77,13 +83,13 @@ class ActivityImportLog extends UnityOfWork {
     }
 
     /**
-     * @param mixed $activities
+     * @param object $activities
+     * @return ActivityImportLog
      */
     public function setActivities($activities)
     {
         $this->activities = $activities;
+        return $this;
     }
-
-
 
 }

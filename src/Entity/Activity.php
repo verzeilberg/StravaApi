@@ -8,7 +8,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Application\Model\UnityOfWork;
 
 /**
- * This class represents a event item.
+ * This class represents a strava activity item.
  * @ORM\Entity(repositoryClass="StravaApi\Repository\ActivityRepository")
  * @ORM\Table(name="activities")
  */
@@ -19,6 +19,7 @@ class Activity extends UnityOfWork
      * @ORM\Id
      * @ORM\Column(name="id", type="integer", length=11)
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @var integer
      */
     protected $id;
 
@@ -29,6 +30,7 @@ class Activity extends UnityOfWork
      * "label_attributes": {"class": "control-label"}
      * })
      * @Annotation\Attributes({"class":"form-control", "readonly":"readonly"})
+     * @var string
      */
     protected $activityId;
 
@@ -40,6 +42,7 @@ class Activity extends UnityOfWork
      * "label_attributes": {"class": "control-label"}
      * })
      * @Annotation\Attributes({"class":"form-control", "readonly":"readonly"})
+     * @var integer
      */
     protected $athleteId;
 
@@ -50,6 +53,7 @@ class Activity extends UnityOfWork
      * "label_attributes": {"class": "control-label"}
      * })
      * @Annotation\Attributes({"class":"form-control", "readonly":"readonly"})
+     * @var string
      */
     protected $name;
 
@@ -60,6 +64,7 @@ class Activity extends UnityOfWork
      * "label_attributes": {"class": "control-label"}
      * })
      * @Annotation\Attributes({"class":"form-control", "placeholder":"Afstand"})
+     * @var float
      */
     protected $distance;
 
@@ -70,6 +75,7 @@ class Activity extends UnityOfWork
      * "label_attributes": {"class": "control-label"}
      * })
      * @Annotation\Attributes({"class":"form-control", "placeholder":"Moving time"})
+     * @var integer
      */
     protected $movingTime;
 
@@ -80,6 +86,7 @@ class Activity extends UnityOfWork
      * "label_attributes": {"class": "control-label"}
      * })
      * @Annotation\Attributes({"class":"form-control", "placeholder":"Elapsed time"})
+     * @var integer
      */
     protected $elapsedTime;
 
@@ -90,6 +97,7 @@ class Activity extends UnityOfWork
      * "label_attributes": {"class": "control-label"}
      * })
      * @Annotation\Attributes({"class":"form-control", "placeholder":"Total elevation gain"})
+     * @var float
      */
     protected $totalElevationGain;
 
@@ -100,6 +108,7 @@ class Activity extends UnityOfWork
      * "label_attributes": {"class": "control-label"}
      * })
      * @Annotation\Attributes({"class":"form-control", "placeholder":"Type"})
+     * @var string
      */
     protected $type;
 
@@ -111,6 +120,7 @@ class Activity extends UnityOfWork
      * "label_attributes": {"class": "control-label"}
      * })
      * @Annotation\Attributes({"class":"form-control", "placeholder":"Workout type"})
+     * @var integer
      */
     protected $workoutType;
 
@@ -122,6 +132,7 @@ class Activity extends UnityOfWork
      * "label_attributes": {"class": "control-label"}
      * })
      * @Annotation\Attributes({"class":"form-control", "placeholder":"Start date"})
+     * @var datetime
      */
     protected $startDate;
 
@@ -132,6 +143,7 @@ class Activity extends UnityOfWork
      * "label_attributes": {"class": "control-label"}
      * })
      * @Annotation\Attributes({"class":"form-control", "placeholder":"Start date local"})
+     * @var datetime
      */
     protected $startDateLocal;
 
@@ -142,6 +154,7 @@ class Activity extends UnityOfWork
      * "label_attributes": {"class": "control-label"}
      * })
      * @Annotation\Attributes({"class":"form-control", "placeholder":"Timezone"})
+     * @var string
      */
     protected $timezone;
 
@@ -152,6 +165,7 @@ class Activity extends UnityOfWork
      * "label_attributes": {"class": "control-label"}
      * })
      * @Annotation\Attributes({"class":"form-control", "placeholder":"Start latitude"})
+     * @var float
      */
     protected $startLat;
 
@@ -162,6 +176,7 @@ class Activity extends UnityOfWork
      * "label_attributes": {"class": "control-label"}
      * })
      * @Annotation\Attributes({"class":"form-control", "placeholder":"Start longitude"})
+     * @var float
      */
     protected $startLng;
 
@@ -172,6 +187,7 @@ class Activity extends UnityOfWork
      * "label_attributes": {"class": "control-label"}
      * })
      * @Annotation\Attributes({"class":"form-control", "placeholder":"End latitude"})
+     * @var float
      */
     protected $endLat;
 
@@ -182,6 +198,7 @@ class Activity extends UnityOfWork
      * "label_attributes": {"class": "control-label"}
      * })
      * @Annotation\Attributes({"class":"form-control", "placeholder":"End longitude"})
+     * @var float
      */
     protected $endLng;
 
@@ -192,6 +209,7 @@ class Activity extends UnityOfWork
      * "label_attributes": {"class": "control-label"}
      * })
      * @Annotation\Attributes({"class":"form-control", "placeholder":"End longitude"})
+     * @var string
      */
     protected $summaryPolyline;
 
@@ -202,6 +220,7 @@ class Activity extends UnityOfWork
      * "label_attributes": {"class": "control-label"}
      * })
      * @Annotation\Attributes({"class":"form-control", "placeholder":"Average speed"})
+     * @var float
      */
     protected $averageSpeed;
 
@@ -212,6 +231,7 @@ class Activity extends UnityOfWork
      * "label_attributes": {"class": "control-label"}
      * })
      * @Annotation\Attributes({"class":"form-control", "placeholder":"Max speed"})
+     * @var float
      */
     protected $maxSpeed;
 
@@ -222,6 +242,7 @@ class Activity extends UnityOfWork
      * "label_attributes": {"class": "control-label"}
      * })
      * @Annotation\Attributes({"class":"form-control", "placeholder":"Average heartrate"})
+     * @var float
      */
     protected $averageHeartrate;
 
@@ -232,6 +253,7 @@ class Activity extends UnityOfWork
      * "label_attributes": {"class": "control-label"}
      * })
      * @Annotation\Attributes({"class":"form-control", "placeholder":"Max heartrate"})
+     * @var float
      */
     protected $maxHeartrate;
 
@@ -242,6 +264,7 @@ class Activity extends UnityOfWork
      * "label_attributes": {"class": "control-label"}
      * })
      * @Annotation\Attributes({"class":"form-control", "placeholder":"Elevation high"})
+     * @var float
      */
     protected $elevHigh;
 
@@ -252,6 +275,7 @@ class Activity extends UnityOfWork
      * "label_attributes": {"class": "control-label"}
      * })
      * @Annotation\Attributes({"class":"form-control", "placeholder":"Elevation low"})
+     * @var float
      */
     protected $elevLow;
 
@@ -262,12 +286,14 @@ class Activity extends UnityOfWork
      * "label_attributes": {"class": "control-label"}
      * })
      * @Annotation\Attributes({"class":"form-control"})
+     * @var string
      */
     protected $description;
 
     /**
      * One activity has many rounds. This is the inverse side.
      * @ORM\OneToMany(targetEntity="Round", mappedBy="activity", orphanRemoval=true, cascade={"persist", "remove"})
+     * @var object
      */
     private $rounds;
 
@@ -276,6 +302,7 @@ class Activity extends UnityOfWork
      * Many features have one product. This is the owning side.
      * @ORM\ManyToOne(targetEntity="ActivityImportLog", inversedBy="activities")
      * @ORM\JoinColumn(name="import_log_id", referencedColumnName="id")
+     * @var object
      */
     private $activityImportLog;
 
@@ -285,7 +312,7 @@ class Activity extends UnityOfWork
     }
 
     /**
-     * @return mixed
+     * @return int
      */
     public function getId()
     {
@@ -293,15 +320,17 @@ class Activity extends UnityOfWork
     }
 
     /**
-     * @param mixed $id
+     * @param int $id
+     * @return Activity
      */
     public function setId($id)
     {
         $this->id = $id;
+        return $this;
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getActivityId()
     {
@@ -309,15 +338,17 @@ class Activity extends UnityOfWork
     }
 
     /**
-     * @param mixed $activityId
+     * @param string $activityId
+     * @return Activity
      */
     public function setActivityId($activityId)
     {
         $this->activityId = $activityId;
+        return $this;
     }
 
     /**
-     * @return mixed
+     * @return int
      */
     public function getAthleteId()
     {
@@ -325,15 +356,17 @@ class Activity extends UnityOfWork
     }
 
     /**
-     * @param mixed $athleteId
+     * @param int $athleteId
+     * @return Activity
      */
     public function setAthleteId($athleteId)
     {
         $this->athleteId = $athleteId;
+        return $this;
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getName()
     {
@@ -341,15 +374,17 @@ class Activity extends UnityOfWork
     }
 
     /**
-     * @param mixed $name
+     * @param string $name
+     * @return Activity
      */
     public function setName($name)
     {
         $this->name = $name;
+        return $this;
     }
 
     /**
-     * @return mixed
+     * @return float
      */
     public function getDistance()
     {
@@ -357,15 +392,17 @@ class Activity extends UnityOfWork
     }
 
     /**
-     * @param mixed $distance
+     * @param float $distance
+     * @return Activity
      */
     public function setDistance($distance)
     {
         $this->distance = $distance;
+        return $this;
     }
 
     /**
-     * @return mixed
+     * @return int
      */
     public function getMovingTime()
     {
@@ -373,15 +410,17 @@ class Activity extends UnityOfWork
     }
 
     /**
-     * @param mixed $movingTime
+     * @param int $movingTime
+     * @return Activity
      */
     public function setMovingTime($movingTime)
     {
         $this->movingTime = $movingTime;
+        return $this;
     }
 
     /**
-     * @return mixed
+     * @return int
      */
     public function getElapsedTime()
     {
@@ -389,15 +428,17 @@ class Activity extends UnityOfWork
     }
 
     /**
-     * @param mixed $elapsedTime
+     * @param int $elapsedTime
+     * @return Activity
      */
     public function setElapsedTime($elapsedTime)
     {
         $this->elapsedTime = $elapsedTime;
+        return $this;
     }
 
     /**
-     * @return mixed
+     * @return float
      */
     public function getTotalElevationGain()
     {
@@ -405,15 +446,17 @@ class Activity extends UnityOfWork
     }
 
     /**
-     * @param mixed $totalElevationGain
+     * @param float $totalElevationGain
+     * @return Activity
      */
     public function setTotalElevationGain($totalElevationGain)
     {
         $this->totalElevationGain = $totalElevationGain;
+        return $this;
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getType()
     {
@@ -421,271 +464,17 @@ class Activity extends UnityOfWork
     }
 
     /**
-     * @param mixed $type
+     * @param string $type
+     * @return Activity
      */
     public function setType($type)
     {
         $this->type = $type;
+        return $this;
     }
 
     /**
-     * @return mixed
-     */
-    public function getStartDate()
-    {
-        return $this->startDate;
-    }
-
-    /**
-     * @param mixed $startDate
-     */
-    public function setStartDate($startDate)
-    {
-        $this->startDate = $startDate;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getStartDateLocal()
-    {
-        return $this->startDateLocal;
-    }
-
-    /**
-     * @param mixed $startDateLocal
-     */
-    public function setStartDateLocal($startDateLocal)
-    {
-        $this->startDateLocal = $startDateLocal;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getTimezone()
-    {
-        return $this->timezone;
-    }
-
-    /**
-     * @param mixed $timezone
-     */
-    public function setTimezone($timezone)
-    {
-        $this->timezone = $timezone;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getStartLat()
-    {
-        return $this->startLat;
-    }
-
-    /**
-     * @param mixed $startLat
-     */
-    public function setStartLat($startLat)
-    {
-        $this->startLat = $startLat;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getStartLng()
-    {
-        return $this->startLng;
-    }
-
-    /**
-     * @param mixed $startLng
-     */
-    public function setStartLng($startLng)
-    {
-        $this->startLng = $startLng;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getEndLat()
-    {
-        return $this->endLat;
-    }
-
-    /**
-     * @param mixed $endLat
-     */
-    public function setEndLat($endLat)
-    {
-        $this->endLat = $endLat;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getEndLng()
-    {
-        return $this->endLng;
-    }
-
-    /**
-     * @param mixed $endLng
-     */
-    public function setEndLng($endLng)
-    {
-        $this->endLng = $endLng;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getSummaryPolyline()
-    {
-        return $this->summaryPolyline;
-    }
-
-    /**
-     * @param mixed $summaryPolyline
-     */
-    public function setSummaryPolyline($summaryPolyline)
-    {
-        $this->summaryPolyline = $summaryPolyline;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getAverageSpeed()
-    {
-        return $this->averageSpeed;
-    }
-
-    /**
-     * @param mixed $averageSpeed
-     */
-    public function setAverageSpeed($averageSpeed)
-    {
-        $this->averageSpeed = $averageSpeed;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getMaxSpeed()
-    {
-        return $this->maxSpeed;
-    }
-
-    /**
-     * @param mixed $maxSpeed
-     */
-    public function setMaxSpeed($maxSpeed)
-    {
-        $this->maxSpeed = $maxSpeed;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getAverageHeartrate()
-    {
-        return $this->averageHeartrate;
-    }
-
-    /**
-     * @param mixed $averageHeartrate
-     */
-    public function setAverageHeartrate($averageHeartrate)
-    {
-        $this->averageHeartrate = $averageHeartrate;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getMaxHeartrate()
-    {
-        return $this->maxHeartrate;
-    }
-
-    /**
-     * @param mixed $maxHeartrate
-     */
-    public function setMaxHeartrate($maxHeartrate)
-    {
-        $this->maxHeartrate = $maxHeartrate;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getElevHigh()
-    {
-        return $this->elevHigh;
-    }
-
-    /**
-     * @param mixed $elevHigh
-     */
-    public function setElevHigh($elevHigh)
-    {
-        $this->elevHigh = $elevHigh;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getElevLow()
-    {
-        return $this->elevLow;
-    }
-
-    /**
-     * @param mixed $elevLow
-     */
-    public function setElevLow($elevLow)
-    {
-        $this->elevLow = $elevLow;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDescription()
-    {
-        return $this->description;
-    }
-
-    /**
-     * @param mixed $description
-     */
-    public function setDescription($description)
-    {
-        $this->description = $description;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getActivityImportLog()
-    {
-        return $this->activityImportLog;
-    }
-
-    /**
-     * @param mixed $activityImportLog
-     */
-    public function setActivityImportLog($activityImportLog)
-    {
-        $this->activityImportLog = $activityImportLog;
-    }
-
-    /**
-     * @return mixed
+     * @return int
      */
     public function getWorkoutType()
     {
@@ -693,15 +482,287 @@ class Activity extends UnityOfWork
     }
 
     /**
-     * @param mixed $workoutType
+     * @param int $workoutType
+     * @return Activity
      */
     public function setWorkoutType($workoutType)
     {
         $this->workoutType = $workoutType;
+        return $this;
     }
 
     /**
-     * @return mixed
+     * @return datetime
+     */
+    public function getStartDate()
+    {
+        return $this->startDate;
+    }
+
+    /**
+     * @param datetime $startDate
+     * @return Activity
+     */
+    public function setStartDate($startDate)
+    {
+        $this->startDate = $startDate;
+        return $this;
+    }
+
+    /**
+     * @return datetime
+     */
+    public function getStartDateLocal()
+    {
+        return $this->startDateLocal;
+    }
+
+    /**
+     * @param datetime $startDateLocal
+     * @return Activity
+     */
+    public function setStartDateLocal($startDateLocal)
+    {
+        $this->startDateLocal = $startDateLocal;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTimezone()
+    {
+        return $this->timezone;
+    }
+
+    /**
+     * @param string $timezone
+     * @return Activity
+     */
+    public function setTimezone($timezone)
+    {
+        $this->timezone = $timezone;
+        return $this;
+    }
+
+    /**
+     * @return float
+     */
+    public function getStartLat()
+    {
+        return $this->startLat;
+    }
+
+    /**
+     * @param float $startLat
+     * @return Activity
+     */
+    public function setStartLat($startLat)
+    {
+        $this->startLat = $startLat;
+        return $this;
+    }
+
+    /**
+     * @return float
+     */
+    public function getStartLng()
+    {
+        return $this->startLng;
+    }
+
+    /**
+     * @param float $startLng
+     * @return Activity
+     */
+    public function setStartLng($startLng)
+    {
+        $this->startLng = $startLng;
+        return $this;
+    }
+
+    /**
+     * @return float
+     */
+    public function getEndLat()
+    {
+        return $this->endLat;
+    }
+
+    /**
+     * @param float $endLat
+     * @return Activity
+     */
+    public function setEndLat($endLat)
+    {
+        $this->endLat = $endLat;
+        return $this;
+    }
+
+    /**
+     * @return float
+     */
+    public function getEndLng()
+    {
+        return $this->endLng;
+    }
+
+    /**
+     * @param float $endLng
+     * @return Activity
+     */
+    public function setEndLng($endLng)
+    {
+        $this->endLng = $endLng;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSummaryPolyline()
+    {
+        return $this->summaryPolyline;
+    }
+
+    /**
+     * @param string $summaryPolyline
+     * @return Activity
+     */
+    public function setSummaryPolyline($summaryPolyline)
+    {
+        $this->summaryPolyline = $summaryPolyline;
+        return $this;
+    }
+
+    /**
+     * @return float
+     */
+    public function getAverageSpeed()
+    {
+        return $this->averageSpeed;
+    }
+
+    /**
+     * @param float $averageSpeed
+     * @return Activity
+     */
+    public function setAverageSpeed($averageSpeed)
+    {
+        $this->averageSpeed = $averageSpeed;
+        return $this;
+    }
+
+    /**
+     * @return float
+     */
+    public function getMaxSpeed()
+    {
+        return $this->maxSpeed;
+    }
+
+    /**
+     * @param float $maxSpeed
+     * @return Activity
+     */
+    public function setMaxSpeed($maxSpeed)
+    {
+        $this->maxSpeed = $maxSpeed;
+        return $this;
+    }
+
+    /**
+     * @return float
+     */
+    public function getAverageHeartrate()
+    {
+        return $this->averageHeartrate;
+    }
+
+    /**
+     * @param float $averageHeartrate
+     * @return Activity
+     */
+    public function setAverageHeartrate($averageHeartrate)
+    {
+        $this->averageHeartrate = $averageHeartrate;
+        return $this;
+    }
+
+    /**
+     * @return float
+     */
+    public function getMaxHeartrate()
+    {
+        return $this->maxHeartrate;
+    }
+
+    /**
+     * @param float $maxHeartrate
+     * @return Activity
+     */
+    public function setMaxHeartrate($maxHeartrate)
+    {
+        $this->maxHeartrate = $maxHeartrate;
+        return $this;
+    }
+
+    /**
+     * @return float
+     */
+    public function getElevHigh()
+    {
+        return $this->elevHigh;
+    }
+
+    /**
+     * @param float $elevHigh
+     * @return Activity
+     */
+    public function setElevHigh($elevHigh)
+    {
+        $this->elevHigh = $elevHigh;
+        return $this;
+    }
+
+    /**
+     * @return float
+     */
+    public function getElevLow()
+    {
+        return $this->elevLow;
+    }
+
+    /**
+     * @param float $elevLow
+     * @return Activity
+     */
+    public function setElevLow($elevLow)
+    {
+        $this->elevLow = $elevLow;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
+     * @param string $description
+     * @return Activity
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+        return $this;
+    }
+
+    /**
+     * @return object
      */
     public function getRounds()
     {
@@ -709,12 +770,33 @@ class Activity extends UnityOfWork
     }
 
     /**
-     * @param mixed $rounds
+     * @param object $rounds
+     * @return Activity
      */
     public function setRounds($rounds)
     {
         $this->rounds = $rounds;
+        return $this;
     }
+
+    /**
+     * @return object
+     */
+    public function getActivityImportLog()
+    {
+        return $this->activityImportLog;
+    }
+
+    /**
+     * @param object $activityImportLog
+     * @return Activity
+     */
+    public function setActivityImportLog($activityImportLog)
+    {
+        $this->activityImportLog = $activityImportLog;
+        return $this;
+    }
+
 
 
 }

@@ -5,7 +5,13 @@ namespace StravaApi\Controller\Factory;
 use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\Factory\FactoryInterface;
 use StravaApi\Controller\StravaController;
+
+/*
+ * Services
+ */
 use StravaApi\Service\StravaService;
+use StravaApi\Service\StravaOAuthService;
+
 /*
  * Entities
  */
@@ -14,7 +20,7 @@ use StravaApi\Entity\Round;
 use StravaApi\Entity\ActivityImportLog;
 
 /**
- * This is the factory for AuthController. Its purpose is to instantiate the controller
+ * This is the factory for StravaController. Its purpose is to instantiate the controller
  * and inject dependencies into its constructor.
  */
 class StravaControllerFactory implements FactoryInterface
@@ -28,11 +34,13 @@ class StravaControllerFactory implements FactoryInterface
         $roundRepository = $entityManager->getRepository(Round::class);
         $activityImportLogRepository = $entityManager->getRepository(ActivityImportLog::class);
         $stravaService = new StravaService($config, $activityRepository, $roundRepository, $activityImportLogRepository);
+        $stravaOAuthService = new StravaOAuthService($config);
         $vhm = $container->get('ViewHelperManager');
 
         return new StravaController(
             $vhm,
             $stravaService,
+            $stravaOAuthService,
             $config
         );
     }

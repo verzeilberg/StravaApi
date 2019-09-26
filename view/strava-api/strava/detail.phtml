@@ -17,6 +17,11 @@ $this->pageBreadcrumbs()->setItems([
     </div>
 </div>
 <div class="row">
+    <div class="col">
+        <a href="<?= $this->url('strava', ['action' => 'update', 'id' => $activity->getId()]); ?>" class="btn btn-info btn-sm" title="Sync activity"><i class="fas fa-sync-alt"></i></a>
+    </div>
+</div>
+<div class="row">
     <div class="col text-center">
         <h1><?= $activity->getName(); ?></h1>
         <h3><?= $activity->getStartDate()->format('d-m-Y'); ?></h3>
@@ -87,14 +92,18 @@ $this->pageBreadcrumbs()->setItems([
 </div>
 <div class="row">
     <div class="col">
-        <canvas id="chart" width="100%"></canvas>
+        <div class="chart-container" style="position: relative; height:40vh; width:80vw">
+            <canvas id="chart" width="100%"></canvas>
+        </div>
     </div>
 </div>
 <script>
 
-    /* Chart with 2 y axes */
+    /*
+     * Chart with 2 y axes
+     */
     var canvas = document.getElementById('chart');
-    new Chart(canvas, {
+    var chart = new Chart(canvas, {
         type: 'bar',
         data: {
             labels: [
@@ -215,7 +224,7 @@ $this->pageBreadcrumbs()->setItems([
                             fontColor: 'white'
                         }
                     }
-                    ],
+                ],
                 xAxes: [{
                     gridLines: {
                         display: false,
@@ -269,6 +278,39 @@ $this->pageBreadcrumbs()->setItems([
 
         flightPath.setMap(map);
     }
+
+    /*
+ * Function to resize above div of chart so the page fits well
+ */
+    function resizeChartWindow()
+    {
+
+        console.log('height: ' ,chart.chartArea.bottom + 25);
+
+        $('.chart-container').height(chart.chartArea.bottom + 25);
+    }
+
+    /*
+     * Init function on page load
+     */
+    resizeChartWindow();
+
+    $(window).resize(function() {
+        if(this.resizeTO) clearTimeout(this.resizeTO);
+        this.resizeTO = setTimeout(function() {
+            $(this).trigger('resizeEnd');
+        }, 500);
+    });
+
+    /*
+     * Init function on page resize
+     */
+    $(window).bind('resizeEnd', function() {
+        resizeChartWindow();
+    });
+
+
+
 </script>
 <script async defer
         src="https://maps.googleapis.com/maps/api/js?key=<?= $googleMapKey ?>&callback=initMap">

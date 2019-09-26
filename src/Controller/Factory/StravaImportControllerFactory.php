@@ -12,7 +12,7 @@ use StravaApi\Service\StravaService;
 use StravaApi\Entity\Round;
 
 /**
- * This is the factory for AuthController. Its purpose is to instantiate the controller
+ * This is the factory for StravaImportController. Its purpose is to instantiate the controller
  * and inject dependencies into its constructor.
  */
 class StravaImportControllerFactory implements FactoryInterface {

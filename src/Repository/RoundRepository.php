@@ -2,15 +2,15 @@
 namespace StravaApi\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\OptimisticLockException;
 use StravaApi\Entity\Round;
 
 class RoundRepository extends EntityRepository
 {
-
     /**
      * Get fastest round
      * @param $type type of activity (exampl. Run or Ride)
-     * @param $workoutType type of workout 1 = Competition 13 = Training
+     * @param int $workoutType type of workout 1 = Competition 13 = Training
      *
      * @return      array
      */
@@ -33,11 +33,8 @@ class RoundRepository extends EntityRepository
     }
 
     /**
-     *
      * Create a new Round object
-     *
      * @return      object
-     *
      */
     public function createRound()
     {
@@ -45,17 +42,32 @@ class RoundRepository extends EntityRepository
     }
 
     /**
-     *
      * Save round to database
-     *
-     * @param       round object
-     * @return      void
-     *
+     * @param       $round object
+     * @return bool
+     * @throws OptimisticLockException
      */
     public function storeRound($round)
     {
         try {
             $this->getEntityManager()->persist($round);
+            $this->getEntityManager()->flush();
+            return true;
+        } catch (\Doctrine\DBAL\DBALException $e) {
+            return false;
+        }
+    }
+
+    /**
+     * Remove round from database
+     * @param       $round object
+     * @return bool
+     * @throws OptimisticLockException
+     */
+    public function removeRound($round)
+    {
+        try {
+            $this->getEntityManager()->remove($round);
             $this->getEntityManager()->flush();
             return true;
         } catch (\Doctrine\DBAL\DBALException $e) {

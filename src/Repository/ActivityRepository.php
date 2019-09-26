@@ -7,27 +7,33 @@ use StravaApi\Entity\Activity;
 
 class ActivityRepository extends EntityRepository
 {
-    /*
+    /**
      * Get activity by activity id
-     * @var $activityId
      * @return object
+     * @var $activityId
      */
     public function getItemByActivityId($activityId = null)
     {
         return $this->findOneBy(['activityId' => $activityId], []);
     }
 
+    /**
+     * Get all activities ordered by start date desc
+     * @return array
+     */
     public function getAllActivities()
     {
-        return $this->findBy([],['startDate' => 'DESC']);
+        return $this->findBy([], ['startDate' => 'DESC']);
     }
 
-    /*
-     * Get total activites
+    /**
+     * Get total activities
      * @param $type type of activity (exampl. Run or Ride)
      * @return      integer
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function getTotalActivities($type = null)
+    public function getTotalItems($type = null)
     {
         $qb = $this->createQueryBuilder('a');
         $qb->select('COUNT(a.id) as total');
@@ -45,8 +51,9 @@ class ActivityRepository extends EntityRepository
     /**
      * Get total distance
      * @param $type type of activity (exampl. Run or Ride)
-     *
      * @return      integer
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function getTotalDistance($type = null)
     {
@@ -64,8 +71,9 @@ class ActivityRepository extends EntityRepository
     /**
      * Get total time
      * @param $type type of activity (exampl. Run or Ride)
-     *
      * @return      integer
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function getTotalTime($type = null)
     {
@@ -83,8 +91,9 @@ class ActivityRepository extends EntityRepository
     /**
      * Get average speed
      * @param $type type of activity (exampl. Run or Ride)
-     *
      * @return      integer
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function getAverageSpeed($type = null)
     {
@@ -102,8 +111,9 @@ class ActivityRepository extends EntityRepository
     /**
      * Get average elevation
      * @param $type type of activity (exampl. Run or Ride)
-     *
      * @return integer
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function getAverageElevation($type = null)
     {
@@ -122,8 +132,9 @@ class ActivityRepository extends EntityRepository
     /**
      * Get average hearthbeat
      * @param $type type of activity (exampl. Run or Ride)
-     *
      * @return      integer
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function getAverageHeartbeat($type = null)
     {
@@ -141,8 +152,7 @@ class ActivityRepository extends EntityRepository
     /**
      * Get longest activity
      * @param $type type of activity (exampl. Run or Ride)
-     * @param $workoutType type of workout 1 = Competition 13 = Training
-     *
+     * @param int $workoutType type of workout 1 = Competition 13 = Training
      * @return      array
      */
     public function getLongestActivity($type = null, $workoutType = 1)
@@ -164,8 +174,7 @@ class ActivityRepository extends EntityRepository
     /**
      * Get fastest activity
      * @param $type type of activity (exampl. Run or Ride)
-     * @param $workoutType type of workout 1 = Competition 13 = Training
-     *
+     * @param int $workoutType type of workout 1 = Competition 13 = Training
      * @return      array
      */
     public function getFastestActivity($type = null, $workoutType = 1)
@@ -184,30 +193,26 @@ class ActivityRepository extends EntityRepository
         return $result[0];
     }
 
-    /*
+    /**
      * Get all activities
-     *
-     * @return query
+     * @return \Doctrine\ORM\Query
      */
     public function getActivities()
     {
         return $this->createQueryBuilder('a')
-                ->orderBy('a.startDate', 'DESC')
-                ->getQuery();
+            ->orderBy('a.startDate', 'DESC')
+            ->getQuery();
     }
 
-    /*
+    /**
      * Get all activities between two dates
-     *
      * @param $startDate object
      * @param $endDate object
-     *
      * @return array
-     *
      */
     public function getActivityBetweenDates($startDate = null, $endDate = null)
     {
-        $result =  $this->createQueryBuilder('a')
+        $result = $this->createQueryBuilder('a')
             ->where('a.startDate BETWEEN :startDate AND :endDate')
             ->setParameter('startDate', $startDate->format('Y-m-d'))
             ->setParameter('endDate', $endDate->format('Y-m-d'))
@@ -219,7 +224,7 @@ class ActivityRepository extends EntityRepository
         return $data;
     }
 
-    /*
+    /**
      * Get activity based on id
      * @params $id
      * @return object
@@ -231,11 +236,11 @@ class ActivityRepository extends EntityRepository
 
     private function getDistance($distance)
     {
-        return intval((($distance / 1000) *100))/100;
+        return intval((($distance / 1000) * 100)) / 100;
     }
 
 
-    /*
+    /**
      * Get unique years from activities
      * @return array
      */
@@ -256,13 +261,12 @@ class ActivityRepository extends EntityRepository
     {
         return new Activity();
     }
+
     /*
- * Save activity to database
- *
- * @params      $activity object
- * @return      object
- *
- */
+     * Save activity to database
+     * @params      $activity object
+     * @return      object
+     */
     public function storeActivity($activity)
     {
         try {
@@ -274,17 +278,21 @@ class ActivityRepository extends EntityRepository
         }
     }
 
-    /*
+    /**
      * Delete a Activity object from database
-     *
-     * @param       activity $activity object
-     * @return      void
-     *
+     * @param activity $activity object
+     * @return bool
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function deleteActivity($activity)
+    public function removeActivity($activity)
     {
-        $this->getEntityManager()->remove($activity);
-        $this->getEntityManager()->flush();
+        try {
+            $this->getEntityManager()->remove($activity);
+            $this->getEntityManager()->flush();
+            return true;
+        } catch (\Doctrine\DBAL\DBALException $e) {
+            return false;
+        }
     }
 
 }

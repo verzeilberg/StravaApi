@@ -18,6 +18,7 @@ class Round extends UnityOfWork {
      * @ORM\Id
      * @ORM\Column(name="id", type="integer", length=11)
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @var integer
      */
     protected $id;
 
@@ -28,6 +29,7 @@ class Round extends UnityOfWork {
      * "label_attributes": {"class": "control-label"}
      * })
      * @Annotation\Attributes({"class":"form-control", "placeholder":"Afstand"})
+     * @var float
      */
     protected $distance;
 
@@ -38,6 +40,7 @@ class Round extends UnityOfWork {
      * "label_attributes": {"class": "control-label"}
      * })
      * @Annotation\Attributes({"class":"form-control", "placeholder":"Elapsed time"})
+     * @var integer
      */
     protected $elapsedTime;
 
@@ -48,6 +51,7 @@ class Round extends UnityOfWork {
      * "label_attributes": {"class": "control-label"}
      * })
      * @Annotation\Attributes({"class":"form-control", "placeholder":"Total elevation gain"})
+     * @var float
      */
     protected $elevationDifference;
 
@@ -58,6 +62,7 @@ class Round extends UnityOfWork {
      * "label_attributes": {"class": "control-label"}
      * })
      * @Annotation\Attributes({"class":"form-control", "placeholder":"Moving time"})
+     * @var integer
      */
     protected $movingTime;
 
@@ -68,6 +73,7 @@ class Round extends UnityOfWork {
      * "label_attributes": {"class": "control-label"}
      * })
      * @Annotation\Attributes({"class":"form-control", "placeholder":"Type"})
+     * @var integer
      */
     protected $split;
 
@@ -78,6 +84,7 @@ class Round extends UnityOfWork {
      * "label_attributes": {"class": "control-label"}
      * })
      * @Annotation\Attributes({"class":"form-control", "placeholder":"Average speed"})
+     * @var float
      */
     protected $averageSpeed;
 
@@ -88,6 +95,7 @@ class Round extends UnityOfWork {
      * "label_attributes": {"class": "control-label"}
      * })
      * @Annotation\Attributes({"class":"form-control", "placeholder":"Average heartrate"})
+     * @var float
      */
     protected $averageHeartrate;
 
@@ -98,6 +106,7 @@ class Round extends UnityOfWork {
      * "label_attributes": {"class": "control-label"}
      * })
      * @Annotation\Attributes({"class":"form-control", "placeholder":"Max heartrate"})
+     * @var integer
      */
     protected $paceZone;
 
@@ -105,11 +114,12 @@ class Round extends UnityOfWork {
      * Many rounds have one activity. This is the owning side.
      * @ORM\ManyToOne(targetEntity="Activity", inversedBy="rounds")
      * @ORM\JoinColumn(name="activity_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
+     * @var object
      */
     private $activity;
 
     /**
-     * @return mixed
+     * @return int
      */
     public function getId()
     {
@@ -117,15 +127,17 @@ class Round extends UnityOfWork {
     }
 
     /**
-     * @param mixed $id
+     * @param int $id
+     * @return Round
      */
     public function setId($id)
     {
         $this->id = $id;
+        return $this;
     }
 
     /**
-     * @return mixed
+     * @return float
      */
     public function getDistance()
     {
@@ -133,15 +145,17 @@ class Round extends UnityOfWork {
     }
 
     /**
-     * @param mixed $distance
+     * @param float $distance
+     * @return Round
      */
     public function setDistance($distance)
     {
         $this->distance = $distance;
+        return $this;
     }
 
     /**
-     * @return mixed
+     * @return int
      */
     public function getElapsedTime()
     {
@@ -149,15 +163,17 @@ class Round extends UnityOfWork {
     }
 
     /**
-     * @param mixed $elapsedTime
+     * @param int $elapsedTime
+     * @return Round
      */
     public function setElapsedTime($elapsedTime)
     {
         $this->elapsedTime = $elapsedTime;
+        return $this;
     }
 
     /**
-     * @return mixed
+     * @return float
      */
     public function getElevationDifference()
     {
@@ -165,15 +181,17 @@ class Round extends UnityOfWork {
     }
 
     /**
-     * @param mixed $elevationDifference
+     * @param float $elevationDifference
+     * @return Round
      */
     public function setElevationDifference($elevationDifference)
     {
         $this->elevationDifference = $elevationDifference;
+        return $this;
     }
 
     /**
-     * @return mixed
+     * @return int
      */
     public function getMovingTime()
     {
@@ -181,15 +199,17 @@ class Round extends UnityOfWork {
     }
 
     /**
-     * @param mixed $movingTime
+     * @param int $movingTime
+     * @return Round
      */
     public function setMovingTime($movingTime)
     {
         $this->movingTime = $movingTime;
+        return $this;
     }
 
     /**
-     * @return mixed
+     * @return int
      */
     public function getSplit()
     {
@@ -197,15 +217,17 @@ class Round extends UnityOfWork {
     }
 
     /**
-     * @param mixed $split
+     * @param int $split
+     * @return Round
      */
     public function setSplit($split)
     {
         $this->split = $split;
+        return $this;
     }
 
     /**
-     * @return mixed
+     * @return float
      */
     public function getAverageSpeed()
     {
@@ -213,15 +235,17 @@ class Round extends UnityOfWork {
     }
 
     /**
-     * @param mixed $averageSpeed
+     * @param float $averageSpeed
+     * @return Round
      */
     public function setAverageSpeed($averageSpeed)
     {
         $this->averageSpeed = $averageSpeed;
+        return $this;
     }
 
     /**
-     * @return mixed
+     * @return float
      */
     public function getAverageHeartrate()
     {
@@ -229,15 +253,17 @@ class Round extends UnityOfWork {
     }
 
     /**
-     * @param mixed $averageHeartrate
+     * @param float $averageHeartrate
+     * @return Round
      */
     public function setAverageHeartrate($averageHeartrate)
     {
         $this->averageHeartrate = $averageHeartrate;
+        return $this;
     }
 
     /**
-     * @return mixed
+     * @return int
      */
     public function getPaceZone()
     {
@@ -245,15 +271,17 @@ class Round extends UnityOfWork {
     }
 
     /**
-     * @param mixed $paceZone
+     * @param int $paceZone
+     * @return Round
      */
     public function setPaceZone($paceZone)
     {
         $this->paceZone = $paceZone;
+        return $this;
     }
 
     /**
-     * @return mixed
+     * @return object
      */
     public function getActivity()
     {
@@ -261,12 +289,13 @@ class Round extends UnityOfWork {
     }
 
     /**
-     * @param mixed $activity
+     * @param object $activity
+     * @return Round
      */
     public function setActivity($activity)
     {
         $this->activity = $activity;
+        return $this;
     }
-
 
 }

@@ -5,10 +5,22 @@ namespace StravaApi\Service;
 interface StravaOAuthServiceInterface {
 
     /**
-     * @param activity $activity
-     * @return boolean
-     * 
+     * Get authorisation link to oauth Strava client
+     * @return mixed
+     */
+    public function getAuthorisationLink();
+
+    /**
+     * Initialise Strava client
+     * @param $code code to initialise Strava client
+     * @return bool|void
      */
     public function initialiseClient($code);
+
+    /**
+     * Get Strava client
+     * @return mixed
+     */
+    public function getClient();
 
 }
