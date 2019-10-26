@@ -90,6 +90,7 @@ class StravaImportController extends AbstractActionController
             //Get all activities after given unix date
             $activities = $this->stravaService->getAllActivities($client, null, $importUnixDate);
         }
+
         //Return view
         return [
             'authoraisationLink' => $authorisationLink,

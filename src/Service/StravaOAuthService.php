@@ -77,7 +77,8 @@ class StravaOAuthService implements StravaOAuthServiceInterface
 
         $authoraisationLink = $this->oauth->getAuthorizationUrl([
             'scope' => [
-                'public',
+                'read',
+                'activity:read'
                 // 'write',
                 // 'view_private',
             ]
