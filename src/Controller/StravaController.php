@@ -2,6 +2,7 @@
 
 namespace StravaApi\Controller;
 
+use StravaApi\Service\StravaAccessTokenService;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\Mvc\MvcEvent;
 use Zend\View\HelperPluginManager;
@@ -35,12 +36,14 @@ class StravaController extends AbstractActionController
         HelperPluginManager $vhm,
         StravaService $stravaService,
         StravaOAuthService $stravaOAuthService,
+        StravaAccessTokenService $accessTokenService,
         array $config
     )
     {
         $this->viewhelpermanager = $vhm;
         $this->stravaService = $stravaService;
         $this->stravaOAuthService = $stravaOAuthService;
+        $this->accessTokenService = $accessTokenService;
         $this->config = $config;
     }
 
@@ -193,23 +196,31 @@ class StravaController extends AbstractActionController
             //Return to activities overview
             return $this->redirect()->toRoute('strava', ['action' => 'activiteiten']);
         }
-        //Get code from config, code is required to initialise the Strava client
-        $code = $this->config['stravaSettings']['code'];
-        //Check if code is set
-        if (!isset($code)) {
+
+        //Check if acces token exist
+        $accessTokensExicst = $this->accessTokenService->accessTokenRepository->checkForAccessTokens();
+        if (!$accessTokensExicst) {
             //Set flash message
-            $this->flashMessenger()->addSuccessMessage('Zorg er a.u.b. voor dat de code is ingevuld om de Strava API client aan te roepen!');
-            //Return to activity
-            return $this->redirect()->toRoute('strava', ['action' => 'detail', 'id' => $activity->getId()]);
+            $this->flashMessenger()->addSuccessMessage('Er is nog geen acces token');
+            //Return to activities overview
+            return $this->redirect()->toRoute('strava', ['action' => 'activiteiten']);
         }
+
+        //Get acces token en check vality
+        $accesToken = $this->accessTokenService->accessTokenRepository->getLatestAccessToken();
+        $accessTokenVality = $this->accessTokenService->checkAccessTokenVality($accesToken);
+        if (!$accessTokenVality) {
+            $tokenData = $this->stravaOAuthService->refreshExchange($accesToken->getRefreshToken());
+            $result = $this->accessTokenService->createAccessToken($tokenData);
+            if ($result) {
+                $accesToken = $this->accessTokenService->accessTokenRepository->getLatestAccessToken();
+            }
+        }
+
         //Get the activity id known on strava
         $activityId = $activity->getActivityId();
-        //Initialise the Strava client
-        $this->stravaOAuthService->initialiseClient($code);
-        //Get the client
-        $client = $this->stravaOAuthService->getClient();
         //Get the Strava activity by client and activity id
-        $stravaActivity = $this->stravaService->getActivity($client, $activityId);
+        $stravaActivity = $this->stravaService->getActivity($accesToken, $activityId);
         //Update the db with the activity from the Strava client
         $success = $this->stravaService->updateActivity($stravaActivity, $activity->getId(), $this->currentUser());
         //If success or not, return appropriate message

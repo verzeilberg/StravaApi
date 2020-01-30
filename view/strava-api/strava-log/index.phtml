@@ -28,12 +28,13 @@ $this->pageBreadcrumbs()->setItems([
             </tr>
             </thead>
             <tbody>
+            <?php $totalImports = 0; ?>
             <?php foreach ($items AS $index => $item) { ?>
                 <?php $nr = $index + 1; ?>
                 <tr id="importLogItem<?= $item->getId(); ?>">
                     <td><?= $nr; ?></td>
                     <td><?= $item->getImportDate()->format('Y-m-d H:i:s'); ?></td>
-                    <th><?= count($item->getActivities()) ?></th>
+                    <th><?= $totalActivities = count($item->getActivities()) ?></th>
                     <td class="text-center">
                         <?php if ($index === 0) { ?>
                             <button type="button" data-importid="<?= $item->getId() ?>"
@@ -44,7 +45,13 @@ $this->pageBreadcrumbs()->setItems([
                         <?php } ?>
                     </td>
                 </tr>
+                <?php $totalImports = $totalImports + $totalActivities; ?>
+
             <?php } ?>
+            <tr>
+                <th colspan="2" class="text-right">Totaal</th>
+                <th colspan="2"><?= $totalImports ?></th>
+            </tr>
             </tbody>
         </table>
     </div>

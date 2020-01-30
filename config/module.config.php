@@ -23,11 +23,6 @@ return [
     ],
     'service_manager' => [
         'invokables' => [
-            Service\StravaOAuthServiceInterface::class => Service\StravaOAuthService::class,
-            Service\StravaServiceInterface::class => Service\StravaService::class,
-            Service\StravaDbServiceInterface::class => Service\StravaDbService::class,
-            StravaImportLogServiceInterface::class => Service\StravaImportLogService::class,
-
         ],
     ],
     'view_helpers' => [
@@ -151,6 +146,12 @@ return [
         'redirectUri' => '',
         'athleteId' => '',
         'code' => '',
+        'approval_prompt' => 'auto', //force or auto
+        'scopes' => [
+            'read',
+            'activity:read',
+            'activity:read_all'
+        ],
         'activitiesPerPage' => 30,
         'googleMapKey' => ''
     ]

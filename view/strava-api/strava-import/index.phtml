@@ -19,7 +19,7 @@ $this->pageBreadcrumbs()->setItems([
 <div class="row mb-3">
 
     <div class="col-md-auto">
-        <?= (!empty($authoraisationLink) ? '<a class="btn btn-dark" href="' . $authoraisationLink . '"><i class="fas fa-plug"></i></a>' : '<span id="importActivities" class="btn btn-dark"><i class="fas fa-upload"></i></span>') ?>
+        <span id="importActivities" class="btn btn-dark">Import <i class="fas fa-upload"></i></span>
     </div>
     <div class="col-md">
         <p>Last import date: <?= (is_object($importLog) && is_object($importLog->getImportDate())? $importLog->getImportDate()->format('d-m-Y H:i:s'):''); ?></p>
@@ -50,23 +50,23 @@ $this->pageBreadcrumbs()->setItems([
             <?php } else { ?>
                 <?php $nr = 1; ?>
                 <?php foreach ($activities AS $index => $activity) { ?>
-                    <tr id="activity-<?= $index ?>" <?= ($activity["workout_type"] == 1 ? 'class="bg-success"' : ''); ?>>
+                    <tr id="activity-<?= $index ?>" <?= ($activity->workout_type == 1 ? 'class="bg-success"' : ''); ?>>
                         <td class="text-center">
                             <?= $nr; ?>
                             <input type="hidden" value="<?php echo $index; ?>" name="activity"/>
                         </td>
                         <td class="text-center">
-                            <?= ($activity["workout_type"] == 1 ? '<i class="fas fa-flag-checkered"></i>' : ''); ?>
-                            <?= ($activity["workout_type"] == 3 ? '<i class="fas fa-dumbbell"></i>' : ''); ?>
+                            <?= ($activity->workout_type == 1 ? '<i class="fas fa-flag-checkered"></i>' : ''); ?>
+                            <?= ($activity->workout_type == 3 ? '<i class="fas fa-dumbbell"></i>' : ''); ?>
                         </td>
                         <td><?= $index ?></td>
-                        <td><?= $activity["start_date"]; ?></td>
-                        <td><?= $activity["name"]; ?></td>
-                        <td><?= $this->stravaViewHelper()->getDistance($activity["distance"])?> km</td>
-                        <td><?= $this->stravaViewHelper()->getAverageSpeed($activity["average_speed"]); ?></td>
-                        <td><?= $this->stravaViewHelper()->getMovingTime($activity["moving_time"]); ?></td>
-                        <td><?= $activity["average_heartrate"]; ?></td>
-                        <td><?= $this->stravaViewHelper()->getTotalElevationGain($activity["total_elevation_gain"]); ?></td>
+                        <td><?= $activity->start_date; ?></td>
+                        <td><?= $activity->name; ?></td>
+                        <td><?= $this->stravaViewHelper()->getDistance($activity->distance)?> km</td>
+                        <td><?= $this->stravaViewHelper()->getAverageSpeed($activity->average_speed); ?></td>
+                        <td><?= $this->stravaViewHelper()->getMovingTime($activity->moving_time); ?></td>
+                        <td><?= $activity->average_heartrate; ?></td>
+                        <td><?= $this->stravaViewHelper()->getTotalElevationGain($activity->total_elevation_gain); ?></td>
                     </tr>
                     <?php $nr++; ?>
                 <?php } ?>

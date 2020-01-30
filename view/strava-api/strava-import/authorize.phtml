@@ -1,0 +1,33 @@
+<?php
+$this->mainMenu()->setActiveItemId('stravabeheer');
+$this->pageBreadcrumbs()->setLayout('beheer');
+$this->pageBreadcrumbs()->setItems([
+    'Beheer' => $this->url('beheer'),
+    'Strava' => $this->url('strava'),
+]);
+?>
+<!-- Page Header -->
+<div class="row">
+    <h1 class="col">STRAVA BEHEER: authoriseer</h1>
+</div>
+<!-- Breadcrumbs -->
+<div class="row">
+    <div class="col">
+        <?= $this->pageBreadcrumbs()->render(); ?>
+    </div>
+</div>
+<div class="row">
+    <div class="col text-center">
+        <p>
+            Hieronder is de authorisatie code voor u ingevuld. Verstuur deze code om een acces token teveerkrijgen.
+        </p>
+    </div>
+</div>
+<div class="row">
+    <div class="col text-center">
+        <form method="post" action="<?= $this->url(); ?>" name="send_authorization_code">
+            <input class="form-control" type="text" value="<?= $code ?>" name="authorization_code"/>
+            <input class="btn btn-dark" type="submit" name="submit_authorization_code" value="Verstuur"/>
+        </form>
+    </div>
+</div>

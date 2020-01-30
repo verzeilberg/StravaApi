@@ -3,8 +3,10 @@
 namespace StravaApi\Controller\Factory;
 
 use Interop\Container\ContainerInterface;
+use StravaApi\Entity\AccessToken;
 use StravaApi\Entity\Activity;
 use StravaApi\Entity\ActivityImportLog;
+use StravaApi\Service\StravaAccessTokenService;
 use Zend\ServiceManager\Factory\FactoryInterface;
 use StravaApi\Controller\StravaImportController;
 use StravaApi\Service\StravaOAuthService;
@@ -26,11 +28,14 @@ class StravaImportControllerFactory implements FactoryInterface {
         $roundRepository = $entityManager->getRepository(Round::class);
         $activityImportLogRepository = $entityManager->getRepository(ActivityImportLog::class);
         $stravaService = new StravaService($config, $activityRepository, $roundRepository, $activityImportLogRepository);
+        $accessTokenRepository = $entityManager->getRepository(AccessToken::class);
+        $accessTokenService = new StravaAccessTokenService($accessTokenRepository);
 
         return new StravaImportController(
             $vhm,
             $stravaService,
             $stravaOAuthService,
+            $accessTokenService,
             $config
         );
     }

@@ -2,28 +2,37 @@
 
 namespace StravaApi\Service;
 
-use Zend\ServiceManager\ServiceLocatorInterface;
-use Strava\API\OAuth;
-use Strava\API\Exception;
-use Strava\API\Client;
-use Strava\API\Service\REST;
-
-class StravaOAuthService implements StravaOAuthServiceInterface
+class StravaOAuthService
 {
 
     protected $config;
-    protected $client;
-    protected $oauth;
+    /**
+     * @var clientId
+     */
     protected $clientId;
+    /**
+     * @var clientSecret
+     */
     protected $clientSecret;
+    /**
+     * @var redirectUri
+     */
     protected $redirectUri;
+    /**
+     * @var aprovalPrompt
+     */
+    protected $aprovalPrompt;
+    /**
+     * @var scopes
+     */
+    protected $scopes;
 
-    public function __construct($config)
+    public function __construct(
+        array $config
+    )
     {
         $this->config = $config;
         $this->setOptions();
-        $this->initialiseOath();
-
     }
 
     /**
@@ -34,81 +43,113 @@ class StravaOAuthService implements StravaOAuthServiceInterface
         $this->clientId = $this->config['stravaSettings']['clientId'];
         $this->clientSecret = $this->config['stravaSettings']['clientSecret'];
         $this->redirectUri = $this->config['stravaSettings']['redirectUri'];
+        $this->aprovalPrompt = $this->config['stravaSettings']['approval_prompt'];
+        $this->scopes = $this->config['stravaSettings']['scopes'];
     }
 
     /**
-     * Initialise Oath client
+     * Get authorize url
+     * @return string
      */
-    private function initialiseOath()
+    private function urlAuthorize()
     {
-        $options = [
-            'clientId' => $this->clientId,
-            'clientSecret' => $this->clientSecret,
-            'redirectUri' => $this->redirectUri
-        ];
-
-        $this->oauth = new OAuth($options);
-
+        return 'https://www.strava.com/oauth/authorize';
     }
 
     /**
-     * Set client with acces token
-     * @param null $accessToken
+     * Get token url
+     * @return string
      */
-    private function setClient($accessToken = null)
+    private function urlToken()
     {
-        try {
-            $adapter = new \GuzzleHttp\Client(['base_uri' => 'https://www.strava.com/api/v3/']);
-            $service = new REST($accessToken, $adapter);  // Define your user token here.
-            $client = new Client($service);
-
-            $this->client = $client;
-        } catch (Exception $e) {
-            print $e->getMessage();
-        }
+        return 'https://www.strava.com/api/v3/oauth/token';
     }
 
     /**
      * Get authorisation link to oauth Strava client
-     * @return mixed
+     * @return mixed|string
      */
     public function getAuthorisationLink()
     {
 
-        $authoraisationLink = $this->oauth->getAuthorizationUrl([
-            'scope' => [
-                'read',
-                'activity:read'
-                // 'write',
-                // 'view_private',
-            ]
-        ]);
+        $authorisationLink = $this->urlAuthorize();
+        $authorisationLink .= '?client_id=' . $this->clientId;
+        $authorisationLink .= '&response_type=code';
+        $authorisationLink .= '&redirect_uri=' . $this->redirectUri;
+        $authorisationLink .= '&approval_prompt=' .$this->aprovalPrompt;
+        $scopes = str_replace(' ', '',implode(', ', $this->scopes));
+        $authorisationLink .= '&scope=' . $scopes;
 
-        return $authoraisationLink;
+        return $authorisationLink;
     }
 
-    /**
-     * Initialise Strava client
-     * @param $code code to initialise Strava client
-     * @return bool|void
-     */
-    public function initialiseClient($code)
-    {
-        $token = $this->oauth->getAccessToken('authorization_code', [
-            'code' => $code
-        ]);
-        $accessToken = $token->getToken();
-        return $this->setClient($accessToken);
-
-
-    }
 
     /**
-     * Get Strava client
+     * Exchange token
+     * @param $code
      * @return mixed
      */
-    public function getClient()
+    public function tokenExchange($code)
     {
-        return $this->client;
+        $curl = curl_init();
+
+        $params = http_build_query([
+            client_id => $this->clientId,
+            client_secret => $this->clientSecret,
+            code => $code,
+            grant_type => 'authorization_code',
+        ]);
+
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => $this->urlToken(),
+            CURLOPT_POSTFIELDS => $params,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_HEADER => false
+        ));
+
+        $response = curl_exec($curl);
+        $err = curl_error($curl);
+        curl_close($curl);
+
+        if ($err) {
+            echo "cURL Error #:" . $err;
+            die();
+        } else {
+            return json_decode($response);
+        }
+    }
+
+    /**
+     * Refresh token
+     * @param $refreshToken
+     * @return mixed
+     */
+    public function refreshExchange($refreshToken)
+    {
+        $curl = curl_init();
+
+        $params = http_build_query([
+            client_id => $this->clientId,
+            client_secret => $this->clientSecret,
+            grant_type => 'refresh_token',
+            refresh_token => $refreshToken
+        ]);
+
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => $this->urlToken(),
+            CURLOPT_POSTFIELDS => $params,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_HEADER => false
+        ));
+
+        $response = curl_exec($curl);
+        $err = curl_error($curl);
+        curl_close($curl);
+        if ($err) {
+            echo "cURL Error #:" . $err;
+            die;
+        } else {
+            return json_decode($response);
+        }
     }
 }
