@@ -21,7 +21,7 @@ class ActivityRepository extends EntityRepository
      * Get all activities ordered by start date desc
      * @return array
      */
-    public function getAllActivities()
+    public function _speed_timegetAllActivities()
     {
         return $this->findBy([], ['startDate' => 'DESC']);
     }
@@ -202,6 +202,137 @@ class ActivityRepository extends EntityRepository
         return $this->createQueryBuilder('a')
             ->orderBy('a.startDate', 'DESC')
             ->getQuery();
+    }
+
+    public function filterActivities($data)
+    {
+
+        $qb = $this->createQueryBuilder('a');
+        $orX = $qb->expr()->orX();
+        //Search on workout title
+        if (!empty($data->title)) {
+            $orX->add($qb->expr()->like('a.name', "'%$data->title%'"));
+        }
+        //Search on training or game
+        if (!empty($data->workoutType)) {
+            $orX->add($qb->expr()->eq('a.workoutType', $data->workoutType));
+        }
+        //Search on year
+        if (!empty($data->year)) {
+            $orX->add($qb->expr()->eq('YEAR(a.startDate)', $data->year));
+        }
+
+        //Search on period
+        if (!empty($data->periodFrom) || !empty($data->periodTo)) {
+            if (!empty($data->periodFrom) && !empty($data->periodTo)) {
+                $periodFrom = new \DateTime($data->periodFrom);
+                $periodTo = new \DateTime($data->periodTo);
+                $andX = $qb->expr()->between('a.startDate', ':periodFrom', ':periodTo');
+                $qb->setParameter('periodFrom', $periodFrom->format('Y-m-d'));
+                $qb->setParameter('periodTo', $periodTo->format('Y-m-d'));
+                $orX->add($andX);
+            } elseif (!empty($data->periodFrom) && empty($data->periodTo)) {
+                $periodFrom = new \DateTime($data->periodFrom);
+                $orX->add($qb->expr()->gte('a.startDate', $periodFrom->format('Y-m-d')));
+            } elseif (empty($data->periodFrom) && !empty($data->periodTo)) {
+                $periodTo = new \DateTime($data->periodTo);
+                $orX->add($qb->expr()->lte('a.startDate', $periodTo->format('Y-m-d')));
+            }
+        }
+
+        //Search on kilometers
+        if (!empty($data->kmFrom) || !empty($data->kmTo)) {
+            $kmFrom = null;
+            $kmTo = null;
+            if (!empty($data->kmFrom)) {
+                $kmFrom = $data->kmFrom * 1000;
+            }
+            if (!empty($data->kmTo)) {
+                $kmTo = $data->kmTo * 1000;
+            }
+            if (!empty($data->kmFrom) && !empty($data->kmTo)) {
+                $andX = $qb->expr()->andX();
+                $andX->add($qb->expr()->gte('a.distance', $kmFrom));
+                $andX->add($qb->expr()->lte('a.distance', $kmTo));
+                $orX->add($andX);
+            } elseif (!empty($data->kmFrom) && empty($data->kmTo)) {
+                $orX->add($qb->expr()->gte('a.distance', $kmFrom));
+            } elseif (empty($data->kmFrom) && !empty($data->kmTo)) {
+                $orX->add($qb->expr()->lte('a.distance', $kmTo));
+            }
+        }
+
+        //Search on tempo
+        if (!empty($data->tempoFrom) || !empty($data->tempoTo)) {
+
+
+            if (!empty($data->tempoFrom) && !empty($data->tempoTo)) {
+
+
+                $periodFrom = new \DateTime($data->tempoFrom);
+                $periodTo = new \DateTime($data->tempoTo);
+                $andX = $qb->expr()->between('a.averageSpeedTime', ':periodFrom', ':periodTo');
+                $qb->setParameter('periodFrom', $periodFrom->format('H:i:s'));
+                $qb->setParameter('periodTo', $periodTo->format('H:i:s'));
+                $orX->add($andX);
+            } elseif (!empty($data->tempoFrom) && empty($data->tempoTo)) {
+                $periodFrom = new \DateTime($data->tempoFrom);
+                $orX->add($qb->expr()->gte('a.averageSpeedTime', $periodFrom->format('H:i:s')));
+            } elseif (empty($data->tempoFrom) && !empty($data->tempoTo)) {
+                $periodTo = new \DateTime($data->tempoTo);
+                $orX->add($qb->expr()->lte('a.averageSpeedTime', $periodTo->format('H:i:s')));
+            }
+        }
+
+        //Search on hearthbeat
+        if (!empty($data->hearthRateFrom) || !empty($data->hearthRateTo)) {
+            if (!empty($data->hearthRateFrom) && !empty($data->hearthRateTo)) {
+                $andX = $qb->expr()->andX();
+                $andX->add($qb->expr()->gte('a.averageHeartrate', $data->hearthRateFrom));
+                $andX->add($qb->expr()->lte('a.averageHeartrate', $data->hearthRateTo));
+                $orX->add($andX);
+            } elseif (!empty($data->hearthRateFrom) && empty($data->hearthRateTo)) {
+                $orX->add($qb->expr()->gte('a.averageHeartrate', $data->hearthRateFrom));
+            } elseif (empty($data->hearthRateFrom) && !empty($data->hearthRateTo)) {
+                $orX->add($qb->expr()->lte('a.averageHeartrate', $data->hearthRateTo));
+            }
+        }
+
+        //Search on height difference
+        if (!empty($data->elevationGainFrom) || !empty($data->elevationGainTo)) {
+            if (!empty($data->elevationGainFrom) && !empty($data->elevationGainTo)) {
+                $andX = $qb->expr()->andX();
+                $andX->add($qb->expr()->gte('a.totalElevationGain', $data->elevationGainFrom));
+                $andX->add($qb->expr()->lte('a.totalElevationGain', $data->elevationGainTo));
+                $orX->add($andX);
+            } elseif (!empty($data->elevationGainFrom) && empty($data->elevationGainTo)) {
+                $orX->add($qb->expr()->gte('a.totalElevationGain', $data->elevationGainFrom));
+            } elseif (empty($data->elevationGainFrom) && !empty($data->elevationGainTo)) {
+                $orX->add($qb->expr()->lte('a.totalElevationGain', $data->elevationGainTo));
+            }
+        }
+
+        $qb->where($orX);
+        return $qb->getQuery();
+    }
+
+    /**
+     * Search activities by params
+     * @param $data
+     * @return \Doctrine\ORM\Query
+     */
+    public function searchActivities($data)
+    {
+        $result = $this->createQueryBuilder('a')
+            ->where('a.startDate BETWEEN :startDate AND :endDate')
+            ->setParameter('startDate', $data->format('Y-m-d'))
+            ->setParameter('endDate', $data->format('Y-m-d'))
+            ->orderBy('a.startDate', 'ASC')
+            ->getQuery()
+            ->getArrayResult();
+        $data['activities'] = $result;
+
+        return $data;
     }
 
     /**

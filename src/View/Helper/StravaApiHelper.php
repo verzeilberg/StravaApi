@@ -50,26 +50,40 @@ class StravaApiHelper extends AbstractHelper
         return "$hours:$minutes:$seconds";
     }
 
+    /**
+     * Get total elevation Gain
+     * @param $totalElevationGain
+     * @return string
+     */
     public function getTotalElevationGain($totalElevationGain)
     {
         return number_format($totalElevationGain, 0, ',', '');
     }
 
-    /*
+    /**
      * Get average speed in hours, minutes and seconds
+     * @param $averageSpeed
+     * @return false|string
      */
     public function getAverageSpeed($averageSpeed)
     {
         return gmdate("H:i:s",1000/$averageSpeed);
     }
 
+    /**
+     * @param $averageSpeed
+     * @return string
+     */
     public function getAverageSpeedForChart($averageSpeed)
     {
         return ltrim(gmdate("i.s",1000/$averageSpeed), 0);
     }
 
-    /*
-     * Get hearthbeath
+    /**
+     * Get heartbeat
+     *
+     * @param $hearthBeath
+     * @return string
      */
     public function getHeartbeath($hearthBeath)
     {

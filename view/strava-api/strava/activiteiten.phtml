@@ -17,7 +17,7 @@ $this->pageBreadcrumbs()->setItems([
     </div>
 </div>
 <?php
-echo $this->partial('strava-api/partial/filter-activities.phtml', ['years' => $years]);
+echo $this->partial('strava-api/partial/filter-activities.phtml', ['years' => $years, 'searchParams' => $searchParams]);
 ?>
 <div class="row">
     <div class="col">
@@ -45,8 +45,9 @@ echo $this->partial('strava-api/partial/filter-activities.phtml', ['years' => $y
                     <td><?= $activity->getStartDate()->format('d-m-Y H:i:s'); ?></td>
                     <td><?= $activity->getName(); ?></td>
                     <td><?= $this->stravaViewHelper()->getDistance($activity->getDistance())?> km</td>
-                    <td><?= $this->stravaViewHelper()->getAverageSpeed($activity->getAverageSpeed()); ?></td>
-                    <td><?= $this->stravaViewHelper()->getMovingTime($activity->getMovingTime()); ?></td>
+                    <td>
+                        <?= $activity->getAverageSpeedTime()->format('H:i:s'); ?></td>
+                    <td><?= $this->stravaViewHelper()->getMovingTime($activity->getMovingTime()); ?> | <?= $activity->getMovingTime(); ?></td>
                     <td><?= $activity->getAverageHeartrate(); ?></td>
                     <td><?= $this->stravaViewHelper()->getTotalElevationGain($activity->GetTotalElevationGain()); ?></td>
                     <td class="text-center">
@@ -65,3 +66,29 @@ echo $this->partial('strava-api/partial/filter-activities.phtml', ['years' => $y
     'Sliding',
     'layout/paginator',
     array('route' => 'beheer/strava', 'action' => 'activiteiten')); ?>
+
+<script>
+    $(document).ready(function () {
+        /**
+         * Init timeshift
+         */
+        $("input[name=tempoFrom], input[name=tempoTo]").timeshift({
+            hourClock: 24
+        });
+
+        /**
+         * Init dateshift
+         */
+        $("input[name=periodFrom], input[name=periodTo]").dateshift({
+            preappelement: '<i class="far fa-calendar-alt"></i>',
+            preapp: 'app',
+            nextButtonText: '<i class="far fa-caret-square-right"></i>',
+            previousButtonText: '<i class="far fa-caret-square-left"></i>',
+            dateFormat: 'dd-mm-yyyy',
+            startHour: '0',
+            startMinutes: '0',
+            startSeconds: '0'
+        });
+
+    })
+</script>

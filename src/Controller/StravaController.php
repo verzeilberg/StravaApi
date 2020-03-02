@@ -114,10 +114,26 @@ class StravaController extends AbstractActionController
      */
     public function activiteitenAction()
     {
+
+        $this->viewhelpermanager->get('headLink')->appendStylesheet('/css/timeshift/timeshift-1.0.css');
+        $this->viewhelpermanager->get('headLink')->appendStylesheet('/css/timeshift/dateshift-1.0.css');
+        $this->viewhelpermanager->get('headScript')->appendFile('/js/timeshift/timeshift-1.0.js');
+        $this->viewhelpermanager->get('headScript')->appendFile('/js/timeshift/dateshift-1.0.js');
+
         //Get page from url for pagination
         $page = $this->params()->fromQuery('page', 1);
-        //Get query for use in pagination
-        $query = $this->stravaService->activityRepository->getActivities();
+
+        $searchParams = null;
+        if ($this->getRequest()->isPost())
+        {
+            $searchParams = $this->getRequest()->getPost();
+            $query = $this->stravaService->activityRepository->filterActivities($searchParams);
+        } else {
+            //Get query for use in pagination
+            $query = $this->stravaService->activityRepository->getActivities();
+
+        }
+
         //Get activities for pagination
         $activities = $this->stravaService->getItemsForPagination($query, $page, 10);
         //Get years for year select
@@ -125,7 +141,8 @@ class StravaController extends AbstractActionController
         //Return view
         return [
             'activities' => $activities,
-            'years' => $years
+            'years' => $years,
+            'searchParams' => $searchParams
         ];
     }
 
@@ -235,5 +252,18 @@ class StravaController extends AbstractActionController
         $this->flashMessenger()->$typeMessage($message);
         //Return to activity
         return $this->redirect()->toRoute('strava', ['action' => 'detail', 'id' => $activity->getId()]);
+    }
+
+    public function addtimetodatabaseAction() {
+        $activities = $this->stravaService->activityRepository->findAll();
+
+        foreach ($activities as $activity) {
+            $tempo = $activity->getAverageSpeed();
+            $averageSpeed = gmdate("H:i:s",1000/$tempo);
+            $averageSpeed = new \DateTime($averageSpeed);
+            $activity->setAverageSpeedTime($averageSpeed);
+            $this->stravaService->activityRepository->storeActivity($activity);
+        }
+
     }
 }

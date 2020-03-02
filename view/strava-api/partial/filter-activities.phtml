@@ -3,87 +3,95 @@
         <h3>Filter activiteiten</h3>
     </div>
 </div>
-<div class="row mb-2">
-    <form class="form-inline">
-        <div class="col">
-            <div class="form-group row">
-                <label class="col-md-3" for="search">Zoeken op naam</label>
-                <div class="col-md-2">
-                    <input type="search" class="form-control" id="search" aria-describedby="search"
-                           placeholder="Search">
-                </div>
-            </div>
+<form method="post" action="">
+    <div class="form-row mb-1">
+        <label class="col-md-2" for="title">Zoeken op naam</label>
+        <label class="col-md-2" for="workoutType">Type workout</label>
+        <label class="col-md-2" for="year">Jaren</label>
+    </div>
+    <div class="form-row mb-3">
+        <div class="col-md-2">
+            <input type="search" class="form-control" id="title" name="title" aria-describedby="search"
+                   placeholder="Search" value="<?= $searchParams->title ?>">
         </div>
-        <div class="col">
-            <div class="form-group row">
-                <label class="col-md-2" for="search">Type workout</label>
-                <div class="col-md-2">
-                    <select class="form-control" name="workoutType">
-                        <option>--Maak uw keuze--</option>
-                        <option value="1">Wedstrijd</option>
-                        <option value="3">Training</option>
-                    </select>
-                </div>
-            </div>
+        <div class="col-md-2">
+            <select class="form-control" id="workoutType" name="workoutType">
+                <option value="">--Maak uw keuze--</option>
+                <option value="1" <?= ($searchParams->workoutType == 1? 'selected':'') ?>>Wedstrijd</option>
+                <option value="3" <?= ($searchParams->workoutType == 3? 'selected':'') ?>>Training</option>
+            </select>
         </div>
-        <div class="col">
-            <div class="form-group row">
-                <label class="col-md-2" for="search">Jaren</label>
-                <div class="col-md-2">
-                    <select class="form-control" name="workoutType">
-                        <option>--Maak uw keuze--</option>
-                        <?php foreach ($years AS $year) { ?>
-                            <option value="<?= $year['jaar'] ?>"><?= $year['jaar'] ?></option>
-                        <?php } ?>
-                    </select>
-                </div>
-            </div>
+        <div class="col-md-2">
+            <select class="form-control" id="year" name="year">
+                <option value="">--Maak uw keuze--</option>
+                <?php foreach ($years AS $year) { ?>
+                    <option value="<?= $year['jaar'] ?>" <?= ($searchParams->year == $year['jaar']? 'selected':'') ?>><?= $year['jaar'] ?></option>
+                <?php } ?>
+            </select>
         </div>
-    </form>
-</div>
-
-<div class="form-group row">
-    <label class="col-md-2" for="search">Km's</label>
-    <div class="col-md-2">
-        <input class="form-control" type="text" value="" name="kmFrom" />
     </div>
-    <div class="col-md-2">
-        <input class="form-control" type="text" value="" name="kmTo" />
+    <div class="form-row mb-1">
+        <div class="col-md-2">&nbsp;</div>
+        <div class="col-md-2">Van</div>
+        <div class="col-md-2">Tot</div>
     </div>
-</div>
-<div class="form-group row mb-3">
-    <label class="col-md-2" for="search">Tempo</label>
-    <div class="col-md-2">
-        <input class="form-control" type="text" value="" name="tempoFrom" />
+    <div class="form-row mb-3">
+        <label class="col-md-2" for="search">Periode</label>
+        <div class="col-md-2">
+            <input class="form-control" type="text" value="<?= $searchParams->periodFrom ?>" name="periodFrom"/>
+        </div>
+        <div class="col-md-2">
+            <input class="form-control" type="text" value="<?= $searchParams->periodTo ?>" name="periodTo"/>
+        </div>
     </div>
-    <div class="col-md-2">
-        <input class="form-control" type="text" value="" name="tempoTo" />
+    <div class="form-row mb-3">
+        <label class="col-md-2" for="search">Km's</label>
+        <div class="col-md-2">
+            <input class="form-control" type="text" value="<?= $searchParams->kmFrom ?>" name="kmFrom"/>
+        </div>
+        <div class="col-md-2">
+            <input class="form-control" type="text" value="<?= $searchParams->kmTo ?>" name="kmTo"/>
+        </div>
     </div>
-</div>
-<div class="form-group row mb-3">
-    <label class="col-md-2" for="search">Beweegtijd</label>
-    <div class="col-md-2">
-        <input class="form-control" type="text" value="" name="movingTimeFrom" />
+    <div class="form-row mb-3">
+        <label class="col-md-2" for="search">Tempo</label>
+        <div class="col-md-2">
+            <input class="form-control" type="hidden" value="<?= $searchParams->tempoFrom ?>" name="tempoFrom"/>
+        </div>
+        <div class="col-md-2">
+            <input class="form-control" type="hidden" value="<?= $searchParams->tempoTo ?>" name="tempoTo"/>
+        </div>
     </div>
-    <div class="col-md-2">
-        <input class="form-control" type="text" value="" name="movingTimeTo" />
+    <div class="form-row mb-3">
+        <label class="col-md-2" for="search">Beweegtijd</label>
+        <div class="col-md-2">
+            <input class="form-control" type="text" value="<?= $searchParams->movingTimeFrom ?>" name="movingTimeFrom"/>
+        </div>
+        <div class="col-md-2">
+            <input class="form-control" type="text" value="<?= $searchParams->movingTimeTo ?>" name="movingTimeTo"/>
+        </div>
     </div>
-</div>
-<div class="form-group row mb-3">
-    <label class="col-md-2" for="search">Hartslag</label>
-    <div class="col-md-2">
-        <input class="form-control" type="text" value="" name="hearthRateFrom" />
+    <div class="form-row mb-3">
+        <label class="col-md-2" for="search">Hartslag</label>
+        <div class="col-md-2">
+            <input class="form-control" type="text" value="<?= $searchParams->hearthRateFrom ?>" name="hearthRateFrom"/>
+        </div>
+        <div class="col-md-2">
+            <input class="form-control" type="text" value="<?= $searchParams->hearthRateTo ?>" name="hearthRateTo"/>
+        </div>
     </div>
-    <div class="col-md-2">
-        <input class="form-control" type="text" value="" name="hearthRateTo" />
+    <div class="form-row mb-3">
+        <label class="col-md-2" for="search">Hoogteverschil</label>
+        <div class="col-md-2">
+            <input class="form-control" type="text" value="<?= $searchParams->elevationGainFrom ?>" name="elevationGainFrom"/>
+        </div>
+        <div class="col-md-2">
+            <input class="form-control" type="text" value="<?= $searchParams->elevationGainTo ?>" name="elevationGainTo"/>
+        </div>
     </div>
-</div>
-<div class="form-group row mb-3">
-    <label class="col-md-2" for="search">Hoogteverschil</label>
-    <div class="col-md-2">
-        <input class="form-control" type="text" value="" name="elevationGainFrom" />
+    <div class="form-row mb-3">
+        <div class="col-md-2">&nbsp;</div>
+        <div class="col-md-2"><input type="submit" name="searchActivities" class="btn btn-dark" value="Zoeken"/></div>
+        <div class="col-md-2">&nbsp;</div>
     </div>
-    <div class="col-md-2">
-        <input class="form-control" type="text" value="" name="elevationGainTo" />
-    </div>
-</div>
+</form>

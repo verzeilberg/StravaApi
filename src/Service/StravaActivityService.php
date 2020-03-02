@@ -671,9 +671,6 @@ class StravaService
         $activity->setEndLng($activityArr->end_latlng[1]);
         $activity->setSummaryPolyline($activityArr->map->polyline);
         $activity->setAverageSpeed($activityArr->average_speed);
-        $averageSpeedTime = gmdate("H:i:s",1000/$activityArr->average_speed);
-        $averageSpeedTime = new \DateTime($averageSpeedTime);
-        $activity->setAverageSpeedTime($averageSpeedTime);
         $activity->setMaxSpeed($activityArr->max_speed);
         $activity->setAverageHeartrate($activityArr->average_heartrate);
         $activity->setMaxHeartrate($activityArr->max_heartrate);

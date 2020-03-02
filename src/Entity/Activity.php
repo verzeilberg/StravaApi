@@ -225,6 +225,17 @@ class Activity extends UnityOfWork
     protected $averageSpeed;
 
     /**
+     * @ORM\Column(name="average_speed_time", type="time", length=11, nullable=true)
+     * @Annotation\Options({
+     * "label": "Average speed",
+     * "label_attributes": {"class": "control-label"}
+     * })
+     * @Annotation\Attributes({"class":"form-control", "placeholder":"Average speed in time"})
+     * @var float
+     */
+    protected $averageSpeedTime;
+
+    /**
      * @ORM\Column(name="max_speed", type="float", length=11, nullable=true)
      * @Annotation\Options({
      * "label": "Max speed",
@@ -794,6 +805,24 @@ class Activity extends UnityOfWork
     public function setActivityImportLog($activityImportLog)
     {
         $this->activityImportLog = $activityImportLog;
+        return $this;
+    }
+
+    /**
+     * @return float
+     */
+    public function getAverageSpeedTime()
+    {
+        return $this->averageSpeedTime;
+    }
+
+    /**
+     * @param float $averageSpeedTime
+     * @return Activity
+     */
+    public function setAverageSpeedTime($averageSpeedTime)
+    {
+        $this->averageSpeedTime = $averageSpeedTime;
         return $this;
     }
 
