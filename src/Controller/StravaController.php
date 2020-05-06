@@ -3,9 +3,9 @@
 namespace StravaApi\Controller;
 
 use StravaApi\Service\StravaAccessTokenService;
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\Mvc\MvcEvent;
-use Zend\View\HelperPluginManager;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\Mvc\MvcEvent;
+use Laminas\View\HelperPluginManager;
 use StravaApi\Service\StravaService;
 use StravaApi\Service\StravaOAuthService;
 

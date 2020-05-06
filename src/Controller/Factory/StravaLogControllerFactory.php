@@ -8,7 +8,7 @@ use StravaApi\Entity\Activity;
 use StravaApi\Entity\ActivityImportLog;
 use StravaApi\Entity\Round;
 use StravaApi\Service\StravaService;
-use Zend\ServiceManager\Factory\FactoryInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 
 /**
  * This is the factory for StravaLogController. Its purpose is to instantiate the controller

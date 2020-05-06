@@ -8,10 +8,10 @@ use StravaApi\Entity\AccessToken;
 use StravaApi\Entity\Activity;
 use StravaApi\Repository\AccessTokenRepository;
 use User\View\Helper\CurrentUser;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as DoctrineAdapter;
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
-use Zend\Paginator\Paginator;
+use Laminas\Paginator\Paginator;
 use Polyline;
 
 /*

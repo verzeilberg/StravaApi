@@ -7,7 +7,7 @@ use StravaApi\Entity\AccessToken;
 use StravaApi\Entity\Activity;
 use StravaApi\Entity\ActivityImportLog;
 use StravaApi\Service\StravaAccessTokenService;
-use Zend\ServiceManager\Factory\FactoryInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use StravaApi\Controller\StravaImportController;
 use StravaApi\Service\StravaOAuthService;
 use StravaApi\Service\StravaService;

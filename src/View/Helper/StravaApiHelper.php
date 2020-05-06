@@ -2,7 +2,7 @@
 
 namespace StravaApi\View\Helper;
 
-use Zend\View\Helper\AbstractHelper;
+use Laminas\View\Helper\AbstractHelper;
 
 // This view helper class translate text
 class StravaApiHelper extends AbstractHelper

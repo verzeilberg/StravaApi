@@ -4,13 +4,13 @@ namespace StravaApi\Controller;
 
 use StravaApi\Repository\AccessTokenRepository;
 use StravaApi\Service\StravaAccessTokenService;
-use Zend\Mvc\MvcEvent;
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\JsonModel;
-use Zend\View\HelperPluginManager;
+use Laminas\Mvc\MvcEvent;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\View\Model\JsonModel;
+use Laminas\View\HelperPluginManager;
 use StravaApi\Service\StravaService;
 use StravaApi\Service\StravaOAuthService;
-use Zend\View\Model\ViewModel;
+use Laminas\View\Model\ViewModel;
 
 
 class StravaImportController extends AbstractActionController

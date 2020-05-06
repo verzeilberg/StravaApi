@@ -2,7 +2,7 @@
 namespace StravaApi\View\Helper\Factory;
 
 use Interop\Container\ContainerInterface;
-use Zend\ServiceManager\Factory\FactoryInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use StravaApi\View\Helper\StravaApiHelper;
 
 /**

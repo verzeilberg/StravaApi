@@ -5,7 +5,7 @@ namespace StravaApi\Controller\Factory;
 use Interop\Container\ContainerInterface;
 use StravaApi\Entity\AccessToken;
 use StravaApi\Service\StravaAccessTokenService;
-use Zend\ServiceManager\Factory\FactoryInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use StravaApi\Controller\StravaController;
 
 /*

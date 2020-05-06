@@ -3,10 +3,10 @@
 namespace StravaApi\Controller;
 
 use StravaApi\Service\StravaService;
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\Mvc\MvcEvent;
-use Zend\View\HelperPluginManager;
-use Zend\View\Model\JsonModel;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\Mvc\MvcEvent;
+use Laminas\View\HelperPluginManager;
+use Laminas\View\Model\JsonModel;
 
 
 class StravaLogController extends AbstractActionController
