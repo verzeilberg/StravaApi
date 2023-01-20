@@ -21,7 +21,7 @@ class ActivityRepository extends EntityRepository
      * Get all activities ordered by start date desc
      * @return array
      */
-    public function _speed_timegetAllActivities()
+    public function getAllActivities()
     {
         return $this->findBy([], ['startDate' => 'DESC']);
     }

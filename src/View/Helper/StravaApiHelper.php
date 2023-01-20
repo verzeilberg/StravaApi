@@ -43,7 +43,7 @@ class StravaApiHelper extends AbstractHelper
         $minutes = floor(($movingTime / 60) % 60);
         $seconds = $movingTime % 60;
 
-        if(count($seconds) == 1) {
+        if(strlen($seconds) == 1) {
             $seconds = '0'.$seconds;
         }
 

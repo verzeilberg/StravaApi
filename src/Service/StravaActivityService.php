@@ -19,7 +19,7 @@ use StravaApi\Repository\ActivityRepository;
 use StravaApi\Repository\RoundRepository;
 use StravaApi\Repository\ActivityImportLogRepository;
 
-class StravaService
+class StravaActivityService
 {
 
     /**
