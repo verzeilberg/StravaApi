@@ -1,27 +1,9 @@
-<?php
-$this->mainMenu()->setActiveItemId('stravabeheer');
-$this->pageBreadcrumbs()->setLayout('beheer');
-$this->pageBreadcrumbs()->setItems([
-    'Beheer' => $this->url('beheer'),
-    'Strava' => $this->url('strava'),
-]);
-?>
-<!-- Page Header -->
-<div class="row">
-    <h1 class="col">STRAVA BEHEER</h1>
-</div>
-<!-- Breadcrumbs -->
-<div class="row">
-    <div class="col">
-        <?= $this->pageBreadcrumbs()->render(); ?>
-    </div>
-</div>
-<div id="stravaOverview" class="row">
+<div id="stravaOverview" class="row mt-2">
     <div class="col">
         <div class="card bg-success">
             <div class="card-header text-center">
                 <i class="fa fa-running"></i>
-                <h5 class="card-title text-center mt-2">Totaal activiteiten</h5>
+                <h5 class="card-title text-center mt-2">Totaal ativiteiten</h5>
             </div>
             <div class="card-body">
                 <h5 class="card-title text-center"><?= $totalRunActivities ?></h5>
@@ -130,14 +112,14 @@ echo $this->partial('strava-api/partial/training-stats.phtml',
         type: 'scatter',
         data: {
             labels: [
-                <?php foreach($activities AS $activity) { ?>
+                <?php foreach($activities as $activity) { ?>
                 "<?= $activity->getName(); ?> (<?= $activity->getStartDate()->format('d-m-Y') ?>)",
                 <?php } ?>
             ],
             datasets: [{
                 label: 'Scatter Dataset',
                 data: [
-                    <?php foreach($activities AS $activity) { ?>
+                    <?php foreach($activities as $activity) { ?>
                     {
                         x: <?= $this->stravaViewHelper()->getDistance($activity->getDistance()) ?>,
                         y: <?= $this->stravaViewHelper()->getAverageSpeedForChart($activity->getAverageSpeed()); ?>
@@ -145,13 +127,13 @@ echo $this->partial('strava-api/partial/training-stats.phtml',
                     <?php } ?>
                 ],
                 pointBackgroundColor: [
-                    <?php foreach($activities AS $activity) { ?>
-                    '#'+Math.floor(Math.random()*16777215).toString(16),
+                    <?php foreach($activities as $activity) { ?>
+                    '#' + Math.floor(Math.random() * 16777215).toString(16),
                     <?php } ?>
                 ],
                 pointHoverBackgroundColor: [
-                    <?php foreach($activities AS $activity) { ?>
-                    '#'+Math.floor(Math.random()*16777215).toString(16),
+                    <?php foreach($activities as $activity) { ?>
+                    '#' + Math.floor(Math.random() * 16777215).toString(16),
                     <?php } ?>
                 ],
                 fill: false,
@@ -162,7 +144,7 @@ echo $this->partial('strava-api/partial/training-stats.phtml',
         options: {
             tooltips: {
                 callbacks: {
-                    label: function(tooltipItem, data) {
+                    label: function (tooltipItem, data) {
                         var label = data.labels[tooltipItem.index];
                         return label + ': (' + tooltipItem.xLabel + ', ' + tooltipItem.yLabel + ')';
                     }
@@ -207,8 +189,7 @@ echo $this->partial('strava-api/partial/training-stats.phtml',
     /*
      * Function to resize above div of scatter chart so the page fits well
      */
-    function resizeScatterWindow()
-    {
+    function resizeScatterWindow() {
         $('.chart-container').height(scatterChart.chartArea.bottom + 25);
     }
 
@@ -218,16 +199,16 @@ echo $this->partial('strava-api/partial/training-stats.phtml',
     resizeScatterWindow();
 
 
-    $(window).resize(function() {
-        if(this.resizeTO) clearTimeout(this.resizeTO);
-        this.resizeTO = setTimeout(function() {
+    $(window).resize(function () {
+        if (this.resizeTO) clearTimeout(this.resizeTO);
+        this.resizeTO = setTimeout(function () {
             $(this).trigger('resizeEnd');
         }, 500);
     });
     /*
      * Init function on page resize
      */
-    $(window).bind('resizeEnd', function() {
+    $(window).bind('resizeEnd', function () {
         resizeScatterWindow();
     });
 </script>

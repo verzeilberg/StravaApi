@@ -8,13 +8,13 @@ use StravaApi\Entity\Round;
 class RoundRepository extends EntityRepository
 {
     /**
-     * Get fastest round
-     * @param $type type of activity (exampl. Run or Ride)
+     * Get the fastest round
+     * @param null $type type of activity (exampl. Run or Ride)
      * @param int $workoutType type of workout 1 = Competition 13 = Training
      *
-     * @return      array
+     * @return Round
      */
-    public function getFastestRound($type = null, $workoutType = 1): array
+    public function getFastestRound($type = null, int $workoutType = 1): Round
     {
         $qb = $this->createQueryBuilder('r');
         $qb->leftJoin('r.activity', 'a');
