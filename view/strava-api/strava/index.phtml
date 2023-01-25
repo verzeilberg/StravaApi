@@ -1,81 +1,81 @@
-<div id="stravaOverview" class="row mt-2">
-    <div class="col">
-        <div class="card bg-success">
-            <div class="card-header text-center">
-                <i class="fa fa-running"></i>
-                <h5 class="card-title text-center mt-2">Totaal ativiteiten</h5>
-            </div>
-            <div class="card-body">
-                <h5 class="card-title text-center"><?= $totalRunActivities ?></h5>
-            </div>
-        </div>
-    </div>
-    <div class="col">
-        <div class="card bg-warning">
-            <div class="card-header text-center">
-                <i class="fas fa-tachometer-alt"></i>
-                <h5 class="card-title text-center mt-2">Gemiddelde tempo</h5>
-            </div>
-            <div class="card-body">
-                <h5 class="card-title text-center">
-                    <?= $this->stravaViewHelper()->getAverageSpeed($averageSpeed) ?>
-                </h5>
+<div id="stravaOverview" class="container-fluid pt-4 px-4">
+    <div class="row g-4">
+        <div class="col">
+            <div class="bg-secondary rounded d-flex align-items-center justify-content-between p-4">
+                <div class="card bg-success">
+                    <div class="card-header text-center">
+                        <i class="fa fa-running"></i>
+                        <h5 class="card-title text-center mt-2">Totaal ativiteiten</h5>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title text-center"><?= $totalRunActivities ?></h5>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-    <div class="col">
-        <div class="card bg-secondary">
-            <div class="card-header text-center">
-                <i class="fas fa-road"></i>
-                <h5 class="card-title text-center mt-2">Totaal km's</h5>
-            </div>
-            <div class="card-body">
-                <h5 class="card-title text-center">
-                    <?= $this->stravaViewHelper()->getDistance($totalRunDistance) ?> km
-                </h5>
-            </div>
-        </div>
-    </div>
-    <div class="col">
-        <div class="card bg-secondary">
-            <div class="card-header text-center">
-                <i class="fas fa-stopwatch"></i>
-                <h5 class="card-title text-center mt-2">Totaal tijd</h5>
-            </div>
-            <div class="card-body">
-                <h5 class="card-title text-center">
-                    <?= $this->stravaViewHelper()->getTotalMovingTime($totalRunTime); ?>
-                </h5>
+        <div class="col">
+            <div class="bg-secondary rounded d-flex align-items-center justify-content-between p-4">
+                <div class="card bg-success">
+                    <div class="card-header text-center">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <h5 class="card-title text-center mt-2">Gemiddelde tempo</h5>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title text-center">
+                            <?= $this->stravaViewHelper()->getAverageSpeed($averageSpeed) ?>
+                        </h5>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-    <div class="col">
-        <div class="card bg-info">
-            <div class="card-header text-center">
-                <i class="fas fa-mountain"></i>
-                <h5 class="card-title text-center mt-2">Gemid. hoogteverschil</h5>
-            </div>
-            <div class="card-body">
-                <h5 class="card-title text-center">
-                    <?= $this->stravaViewHelper()->getTotalElevationGain($averageElevation); ?>
-                </h5>
+        <div class="col">
+            <div class="bg-secondary rounded d-flex align-items-center justify-content-between p-4">
+                <div class="card bg-success">
+                    <div class="card-header text-center">
+                        <i class="fas fa-road"></i>
+                        <h5 class="card-title text-center mt-2">Totaal km's</h5>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title text-center">
+                            <?= $this->stravaViewHelper()->getDistance($totalRunDistance) ?> km
+                        </h5>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-    <div class="col">
-        <div class="card bg-danger">
-            <div class="card-header text-center">
-                <i class="fas fa-heartbeat"></i>
-                <h5 class="card-title text-center mt-2">Gemiddelde hartslag</h5>
+        <div class="col">
+            <div class="bg-secondary rounded d-flex align-items-center justify-content-between p-4">
+                <div class="card bg-success">
+                    <div class="card-header text-center">
+                        <i class="fas fa-stopwatch"></i>
+                        <h5 class="card-title text-center mt-2">Totaal tijd</h5>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title text-center">
+                            <?= $this->stravaViewHelper()->getTotalMovingTime($totalRunTime); ?>
+                        </h5>
+                    </div>
+                </div>
             </div>
-            <div class="card-body">
-                <h5 class="card-title text-center">
-                    <?= $this->stravaViewHelper()->getTotalElevationGain($averageHeartbeat); ?>
-                </h5>
+        </div>
+        <div class="col">
+            <div class="bg-secondary rounded d-flex align-items-center justify-content-between p-4">
+                <div class="card bg-success">
+                    <div class="card-header text-center">
+                        <i class="fas fa-mountain"></i>
+                        <h5 class="card-title text-center mt-2">Gemid. hoogteverschil</h5>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title text-center">
+                            <?= $this->stravaViewHelper()->getTotalElevationGain($averageElevation); ?>
+                        </h5>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
+
 <?php
 /*
  * Partial for fastest competition run, round and longest run
