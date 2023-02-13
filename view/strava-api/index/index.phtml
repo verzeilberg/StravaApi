@@ -1,37 +1,19 @@
-<?php
-$this->headTitle('Running stats');
-$this->mainMenu()->setActiveItemId('runningStats');
-$this->pageBreadcrumbs()->setItems([
-    'Home' => $this->url('home'),
-    'Running stats' => $this->url('runningStats'),
-]);
-?>
-<!-- Page Header -->
-<header class="masthead" style="background-image: url('img/bg.jpg')">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-8 col-md-10 mx-auto">
-                <div class="site-heading">
-                    <h1 class="index-title">Running stats</h1>
-                </div>
+<!-- Main Content -->
+<div class="most-popular" id="runningStats">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="heading-section">
+                <h4><em>Running</em> stats</h4>
             </div>
         </div>
-    </div>
-</header>
-<!-- Breadcrumbs -->
-<?= $this->pageBreadcrumbs()->render(); ?>
-<!-- Main Content -->
-<div class="container" id="runningStats">
-
-    <div class="row">
         <div class="col-sm-12 col-md-12 col-lg-12">
-            <form id="selectYear" method="post" class="bg-dark pt-1 pb-1">
+            <form id="selectYear" method="post" class="pt-1 pb-1">
                 <div class="row mt-2 mb-2">
-                    <div class="col text-right">
-                        <label class="col-form-label sr-only" for="year">Jaar</label>
+                    <div class="col text-end">
+                        <label class="col-form-label" for="year">Jaar</label>
                     </div>
                     <div class="col-4">
-                        <select name="year" id="year" class="form-control form-control-sm">
+                        <select name="year" id="year" class="form-select form-select-sm">
                             <?php foreach ($years AS $year) { ?>
                                 <option <?= ($currentYear == $year['jaar'] ? 'selected' : '') ?>
                                         value="<?= $year['jaar'] ?>"><?= $year['jaar']; ?></option>
@@ -39,7 +21,7 @@ $this->pageBreadcrumbs()->setItems([
                         </select>
                     </div>
                     <div class="col-4">
-                        <select name="month" id="month" class="form-control form-control-sm">
+                        <select name="month" id="month" class="form-select form-select-sm">
                             <option <?= ($currentMonth == '' ? 'selected' : '') ?> value="">Alle maanden</option>
                             <?php foreach ($months AS $index => $month) { ?>
                                 <option <?= ($currentMonth == $index ? 'selected' : '') ?>
@@ -48,7 +30,7 @@ $this->pageBreadcrumbs()->setItems([
                         </select>
                     </div>
                     <div class="col text-left">
-                        <label class="col-form-label sr-only" for="category">Maand</label>
+                        <label class="col-form-label" for="category">Maand</label>
                     </div>
                 </div>
             </form>

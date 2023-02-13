@@ -11,7 +11,7 @@ $(document).ready(function () {
                 data: [],
                 backgroundColor: 'rgba(80, 109, 153, 0.3)',
                 borderWidth: 1,
-                borderColor: 'rgba(80, 109, 153, 1)'
+                borderColor: 'rgba(255,255,255, 0.9)'
             }, {
                 label: 'Totale afstand deze maand in km',
                 data: [],
@@ -30,36 +30,36 @@ $(document).ready(function () {
                 display: true,
                 text: 'Afstand per activiteit ten opzichte van totale afstand deze maand',
                 fontSize: 16,
-                fontColor: 'black',
+                fontColor: 'white',
                 fontFamily: 'Arial, Verdana'
             },
             scales: {
                 yAxes: [{
                     ticks: {
                         beginAtZero: true,
-                        fontColor: "black"
+                        fontColor: "white"
                     },
                     gridLines: {
                         display: false,
-                        color: "#000000",
-                        fontColor: 'white',
+                        color: "#ffffff",
+                        fontColor: "white",
                     },
                 }],
                 xAxes: [{
                     gridLines: {
                         display: false,
-                        color: "#000000",
-                        fontColor: 'black'
+                        color: "#ffffff",
+                        fontColor: "white"
                     },
                     ticks: {
-                        fontColor: "black"
+                        fontColor: "white"
                     }
                 }]
             },
             legend: {
                 labels: {
                     // This more specific font property overrides the global property
-                    fontColor: 'black',
+                    fontColor: 'white',
                     defaultFontFamily: 'Arial, Verdana'
                 }
             }
