@@ -1,31 +1,11 @@
-<?php
-$this->headTitle('Run stats detail');
-$this->mainMenu()->setActiveItemId('runningStats');
-$this->pageBreadcrumbs()->setItems([
-    'Home' => $this->url('home'),
-    'Running stats' => $this->url('runningStats'),
-    'Detail' => $this->url('runningStats'),
-]);
-?>
-
-<!-- Page Header -->
-<header class="masthead" style="background-image: url('/img/bg.jpg')">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-8 col-md-10 mx-auto">
-                <div class="site-heading">
-                    <h1 class="index-title">Running stats</h1>
-                    <h2 class="index-title"><?= $activity->getName(); ?></h2>
-                    <span class="subheading"><?= $activity->getStartDate()->format('d-m-Y'); ?></span>
-                </div>
+<div class="most-popular module-page" id="runningStats">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="heading-section">
+                <h4><em>Running</em> stats</h4>
             </div>
         </div>
     </div>
-</header>
-<!-- Breadcrumbs -->
-<?= $this->pageBreadcrumbs()->render(); ?>
-<!-- Main Content -->
-<div class="container" id="runningStats">
     <div class="row mb-3">
         <div class="col text-center">
             <?= $activity->getDescription(); ?>
@@ -189,7 +169,7 @@ $this->pageBreadcrumbs()->setItems([
                 display: true,
                 text: 'Gemiddelde tempo per km afgezet tegen totale gemiddelde tempo',
                 fontSize: 16,
-                fontColor: 'black',
+                fontColor: '#ec6090',
                 fontFamily: 'Arial, Verdana'
             },
             scales: {
@@ -200,11 +180,11 @@ $this->pageBreadcrumbs()->setItems([
                         position: 'left',
                         ticks: {
                             beginAtZero: true,
-                            fontColor: "#000"
+                            fontColor: "#ec6090"
                         },
                         gridLines: {
                             display: false,
-                            color: "#000000",
+                            color: "#ec6090",
                             fontColor: 'white'
                         }
                     }, {
@@ -213,30 +193,30 @@ $this->pageBreadcrumbs()->setItems([
                         position: 'right',
                         ticks: {
                             beginAtZero: true,
-                            fontColor: "#000"
+                            fontColor: "#ec6090"
                         },
                         gridLines: {
                             display: false,
-                            color: "#000000",
-                            fontColor: 'white'
+                            color: "#ec6090",
+                            fontColor: '#ec6090'
                         }
                     }
                 ],
                 xAxes: [{
                     gridLines: {
                         display: false,
-                        color: "#000000",
-                        fontColor: 'white',
+                        color: "#ec6090",
+                        fontColor: '#ec6090',
                     },
                     ticks: {
-                        fontColor: "black"
+                        fontColor: "#ec6090"
                     },
                 }]
             },
             legend: {
                 labels: {
                     // This more specific font property overrides the global property
-                    fontColor: 'black',
+                    fontColor: '#ec6090',
                     defaultFontFamily: 'Arial, Verdana'
                 }
             }

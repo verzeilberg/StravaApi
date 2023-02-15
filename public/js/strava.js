@@ -19,7 +19,7 @@ $(document).ready(function () {
                     'rgba(255,0,0,0.0)'
                 ],
                 borderWidth: 5,
-                borderColor: "#dc3545",
+                borderColor: "#ffffff",
                 // Changes this dataset to become a line
                 type: 'line'
             }],
@@ -30,36 +30,36 @@ $(document).ready(function () {
                 display: true,
                 text: 'Afstand per activiteit ten opzichte van totale afstand deze maand',
                 fontSize: 16,
-                fontColor: 'white',
+                fontColor: '#ec6090',
                 fontFamily: 'Arial, Verdana'
             },
             scales: {
                 yAxes: [{
                     ticks: {
                         beginAtZero: true,
-                        fontColor: "white"
+                        fontColor: "#ec6090"
                     },
                     gridLines: {
                         display: false,
-                        color: "#ffffff",
-                        fontColor: "white",
+                        color: "#ec6090",
+                        fontColor: "#ec6090",
                     },
                 }],
                 xAxes: [{
                     gridLines: {
                         display: false,
-                        color: "#ffffff",
-                        fontColor: "white"
+                        color: "#ec6090",
+                        fontColor: "#ec6090"
                     },
                     ticks: {
-                        fontColor: "white"
+                        fontColor: "#ec6090"
                     }
                 }]
             },
             legend: {
                 labels: {
                     // This more specific font property overrides the global property
-                    fontColor: 'white',
+                    fontColor: '#ec6090',
                     defaultFontFamily: 'Arial, Verdana'
                 }
             }
