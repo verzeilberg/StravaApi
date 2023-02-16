@@ -67,6 +67,12 @@ class StravaApiHelper extends AbstractHelper
      */
     public function getAverageSpeed($averageSpeed)
     {
+
+        if ($averageSpeed === 0)
+        {
+            return 0;
+        }
+
         return gmdate("H:i:s",1000/$averageSpeed);
     }
 

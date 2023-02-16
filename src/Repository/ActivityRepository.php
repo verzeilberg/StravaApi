@@ -105,6 +105,11 @@ class ActivityRepository extends EntityRepository
         }
         $query = $qb->getQuery();
         $result = $query->getSingleResult();
+
+        if ($result['total_runs'] === 0) {
+            return 0;
+        }
+
         return $result['average_speed'] / $result['total_runs'];
     }
 
@@ -125,6 +130,11 @@ class ActivityRepository extends EntityRepository
         }
         $query = $qb->getQuery();
         $result = $query->getSingleResult();
+
+        if ($result['total_runs'] === 0) {
+            return 0;
+        }
+
         return $result['total_elevation_gain'] / $result['total_runs'];
     }
 
@@ -146,6 +156,11 @@ class ActivityRepository extends EntityRepository
         }
         $query = $qb->getQuery();
         $result = $query->getSingleResult();
+
+        if ($result['total_runs'] === 0) {
+            return 0;
+        }
+
         return $result['average_heartrate'] / $result['total_runs'];
     }
 
