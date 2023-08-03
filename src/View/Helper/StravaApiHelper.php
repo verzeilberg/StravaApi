@@ -40,7 +40,7 @@ class StravaApiHelper extends AbstractHelper
     public function getTotalMovingTime($movingTime)
     {
         $hours = floor($movingTime / 3600);
-        $minutes = floor(($movingTime / 60) % 60);
+        $minutes = floor((round($movingTime / 60)) % 60);
         $seconds = $movingTime % 60;
 
         if(strlen($seconds) == 1) {
@@ -73,7 +73,7 @@ class StravaApiHelper extends AbstractHelper
             return 0;
         }
 
-        return gmdate("H:i:s",1000/$averageSpeed);
+        return gmdate("H:i:s",round(1000/$averageSpeed));
     }
 
     /**
