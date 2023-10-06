@@ -54,7 +54,7 @@
                 </thead>
                 <tbody>
                 <?php $distance = 0; ?>
-                <?php foreach ($rounds AS $index => $effort) {
+                <?php foreach ($rounds as $index => $effort) {
                     $distance = $distance + $effort->getDistance();
                     ?>
                     <tr>
@@ -77,154 +77,156 @@
     </div>
 </div>
 <script>
-
-    /* Chart with 2 y axes */
-    var canvas = document.getElementById('chart');
-    new Chart(canvas, {
-        type: 'bar',
-        data: {
-            labels: [
-                <?php $distance = 0; ?>
-                <?php foreach($rounds AS $round) {
-                $distance = $distance + $round->getDistance();
-                ?>
-                "<?= $this->stravaViewHelper()->getDistance($distance); ?>",
-                <?php } ?>
-            ],
-            datasets: [{
-                label: 'Gemiddelde tempo per km',
-                yAxisID: 'A',
-                data: [
-                    <?php foreach($rounds AS $round) { ?>
-                    <?= $this->stravaViewHelper()->getAverageSpeedForChart($round->getAverageSpeed()); ?>,
+    $(document).ready(function () {
+        /* Chart with 2 y axes */
+        var canvas = document.getElementById('chart');
+        new Chart(canvas, {
+            type: 'bar',
+            data: {
+                labels: [
+                    <?php $distance = 0; ?>
+                    <?php foreach($rounds as $round) {
+                    $distance = $distance + $round->getDistance();
+                    ?>
+                    "<?= $this->stravaViewHelper()->getDistance($distance); ?>",
                     <?php } ?>
                 ],
-                backgroundColor: [
-                    <?php foreach($rounds AS $round) { ?>
-                    'rgba(3, 201, 169, 0.8)',
-                    <?php } ?>
-                ]
-            },
-                {
-                    label: 'Gemiddelde tempo totaal',
+                datasets: [{
+                    label: 'Gemiddelde tempo per km',
                     yAxisID: 'A',
                     data: [
-                        <?php foreach($rounds AS $round) { ?>
-                        <?= $this->stravaViewHelper()->getAverageSpeedForChart($activity->getAverageSpeed()); ?>,
-                        <?php } ?>
-                    ],
-                    borderWidth: 5,
-                    backgroundColor: [
-                        <?php foreach($rounds AS $round) { ?>
-                        'rgba(255, 203, 5, 0)',
-                        <?php } ?>
-                    ],
-                    borderColor: [
-                        <?php foreach($rounds AS $round) { ?>
-                        'rgba(254, 0, 0, 0.8)',
-                        <?php } ?>
-                    ],
-                    // Changes this dataset to become a line
-                    type: 'line'
-                },
-                {
-                    label: 'Gemiddelde hartslag per km',
-                    yAxisID: 'B',
-                    data: [
-                        <?php foreach($rounds AS $round) { ?>
-                        <?= $round->getAverageHeartrate(); ?>,
+                        <?php foreach($rounds as $round) { ?>
+                        <?= $this->stravaViewHelper()->getAverageSpeedForChart($round->getAverageSpeed()); ?>,
                         <?php } ?>
                     ],
                     backgroundColor: [
-                        <?php foreach($rounds AS $round) { ?>
-                        'rgba(255, 203, 5, 0.8)',
+                        <?php foreach($rounds as $round) { ?>
+                        'rgba(3, 201, 169, 0.8)',
                         <?php } ?>
                     ]
                 },
-                {
-                    label: 'Gemiddelde hartslag totaal',
-                    yAxisID: 'B',
-                    data: [
-                        <?php foreach($rounds AS $round) { ?>
-                        <?= $activity->getAverageHeartrate(); ?>,
-                        <?php } ?>
-                    ],
-                    borderWidth: 5,
-                    backgroundColor: [
-                        <?php foreach($rounds AS $round) { ?>
-                        'rgba(222, 226, 230, 0)',
-                        <?php } ?>
-                    ],
-                    borderColor: [
-                        <?php foreach($rounds AS $round) { ?>
-                        'rgba(241, 90, 34, 0.8)',
-                        <?php } ?>
-                    ],
-                    // Changes this dataset to become a line
-                    type: 'line'
-                }]
-        },
-        options: {
-            title: {
-                display: true,
-                text: 'Gemiddelde tempo per km afgezet tegen totale gemiddelde tempo',
-                fontSize: 16,
-                fontColor: '#ec6090',
-                fontFamily: 'Arial, Verdana'
-            },
-            scales: {
-                yAxes: [
                     {
-                        id: 'A',
-                        //type: 'linear',
-                        position: 'left',
-                        ticks: {
-                            beginAtZero: true,
-                            fontColor: "#ec6090"
-                        },
-                        gridLines: {
-                            display: false,
-                            color: "#ec6090",
-                            fontColor: 'white'
-                        }
-                    }, {
-                        id: 'B',
-                        type: 'linear',
-                        position: 'right',
-                        ticks: {
-                            beginAtZero: true,
-                            fontColor: "#ec6090"
-                        },
-                        gridLines: {
-                            display: false,
-                            color: "#ec6090",
-                            fontColor: '#ec6090'
-                        }
-                    }
-                ],
-                xAxes: [{
-                    gridLines: {
-                        display: false,
-                        color: "#ec6090",
-                        fontColor: '#ec6090',
+                        label: 'Gemiddelde tempo totaal',
+                        yAxisID: 'A',
+                        data: [
+                            <?php foreach($rounds as $round) { ?>
+                            <?= $this->stravaViewHelper()->getAverageSpeedForChart($activity->getAverageSpeed()); ?>,
+                            <?php } ?>
+                        ],
+                        borderWidth: 5,
+                        backgroundColor: [
+                            <?php foreach($rounds as $round) { ?>
+                            'rgba(255, 203, 5, 0)',
+                            <?php } ?>
+                        ],
+                        borderColor: [
+                            <?php foreach($rounds as $round) { ?>
+                            'rgba(254, 0, 0, 0.8)',
+                            <?php } ?>
+                        ],
+                        // Changes this dataset to become a line
+                        type: 'line'
                     },
-                    ticks: {
-                        fontColor: "#ec6090"
+                    {
+                        label: 'Gemiddelde hartslag per km',
+                        yAxisID: 'B',
+                        data: [
+                            <?php foreach($rounds as $round) { ?>
+                            <?= $round->getAverageHeartrate(); ?>,
+                            <?php } ?>
+                        ],
+                        backgroundColor: [
+                            <?php foreach($rounds as $round) { ?>
+                            'rgba(255, 203, 5, 0.8)',
+                            <?php } ?>
+                        ]
                     },
-                }]
+                    {
+                        label: 'Gemiddelde hartslag totaal',
+                        yAxisID: 'B',
+                        data: [
+                            <?php foreach($rounds as $round) { ?>
+                            <?= $activity->getAverageHeartrate(); ?>,
+                            <?php } ?>
+                        ],
+                        borderWidth: 5,
+                        backgroundColor: [
+                            <?php foreach($rounds as $round) { ?>
+                            'rgba(222, 226, 230, 0)',
+                            <?php } ?>
+                        ],
+                        borderColor: [
+                            <?php foreach($rounds as $round) { ?>
+                            'rgba(241, 90, 34, 0.8)',
+                            <?php } ?>
+                        ],
+                        // Changes this dataset to become a line
+                        type: 'line'
+                    }]
             },
-            legend: {
-                labels: {
-                    // This more specific font property overrides the global property
+            options: {
+                title: {
+                    display: true,
+                    text: 'Gemiddelde tempo per km afgezet tegen totale gemiddelde tempo',
+                    fontSize: 16,
                     fontColor: '#ec6090',
-                    defaultFontFamily: 'Arial, Verdana'
+                    fontFamily: 'Arial, Verdana'
+                },
+                scales: {
+                    yAxes: [
+                        {
+                            id: 'A',
+                            //type: 'linear',
+                            position: 'left',
+                            ticks: {
+                                beginAtZero: true,
+                                fontColor: "#ec6090"
+                            },
+                            gridLines: {
+                                display: false,
+                                color: "#ec6090",
+                                fontColor: 'white'
+                            }
+                        }, {
+                            id: 'B',
+                            type: 'linear',
+                            position: 'right',
+                            ticks: {
+                                beginAtZero: true,
+                                fontColor: "#ec6090"
+                            },
+                            gridLines: {
+                                display: false,
+                                color: "#ec6090",
+                                fontColor: '#ec6090'
+                            }
+                        }
+                    ],
+                    xAxes: [{
+                        gridLines: {
+                            display: false,
+                            color: "#ec6090",
+                            fontColor: '#ec6090',
+                        },
+                        ticks: {
+                            fontColor: "#ec6090"
+                        },
+                    }]
+                },
+                legend: {
+                    labels: {
+                        // This more specific font property overrides the global property
+                        fontColor: '#ec6090',
+                        defaultFontFamily: 'Arial, Verdana'
+                    }
                 }
             }
-        }
+        });
     });
 
-
-    //Create polyline on google map
+    /**
+     * Create polyline on Google map
+     */
     function initMap() {
         var map = new google.maps.Map(document.getElementById('map'), {
             zoom: 14,
@@ -234,8 +236,8 @@
 
         var flightPlanCoordinates = [
 
-            <?php foreach($points AS $point) { ?>
-            {lat: <?= $point[0]; ?>, lng: <?= $point[1]; ?>},
+            <?php foreach($points as $point) { ?>
+            {lat: <?= $point[0] ?>, lng: <?= $point[1] ?>},
             <?php } ?>
         ];
 
@@ -248,13 +250,14 @@
         var flightPath = new google.maps.Polyline({
             path: flightPlanCoordinates,
             geodesic: true,
-            strokeColor: '#FF0000',
+            strokeColor: '#e75e8d',
             strokeOpacity: 1.0,
-            strokeWeight: 2
+            strokeWeight: 4
         });
 
         flightPath.setMap(map);
     }
+
 </script>
 <script async defer
         src="https://maps.googleapis.com/maps/api/js?key=<?= $googleMapKey ?>&callback=initMap">

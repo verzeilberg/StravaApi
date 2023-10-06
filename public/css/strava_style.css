@@ -39,3 +39,7 @@ i.darkBlue {
 #runningStats .row .col .card .card-body h5 {
     color:#fff;
 }
+
+#stravaOverview .card {
+    width:100%;
+}

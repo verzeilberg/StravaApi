@@ -40,6 +40,9 @@ class StravaOAuthService
      */
     private function setOptions()
     {
+
+
+
         $this->clientId = $this->config['stravaSettings']['clientId'];
         $this->clientSecret = $this->config['stravaSettings']['clientSecret'];
         $this->redirectUri = $this->config['stravaSettings']['redirectUri'];
@@ -129,10 +132,10 @@ class StravaOAuthService
         $curl = curl_init();
 
         $params = http_build_query([
-            client_id => $this->clientId,
-            client_secret => $this->clientSecret,
-            grant_type => 'refresh_token',
-            refresh_token => $refreshToken
+            "client_id" => $this->clientId,
+            "client_secret" => $this->clientSecret,
+            "grant_type" => 'refresh_token',
+            "refresh_token" => $refreshToken
         ]);
 
         curl_setopt_array($curl, array(

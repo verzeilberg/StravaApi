@@ -73,12 +73,9 @@ class StravaImportController extends AbstractActionController
      */
     public function indexAction()
     {
-
+        $this->vhm->get('headScript')->appendFile('/js/strava-import.js');
         $accessTokensExicst = $this->accessTokenService->accessTokenRepository->checkForAccessTokens();
-
         if (!$accessTokensExicst) {
-
-
             if ($this->getRequest()->isPost()) {
                 $data = $this->getRequest()->getPost();
 

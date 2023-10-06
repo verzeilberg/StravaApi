@@ -1,59 +1,52 @@
-<?php
-$this->mainMenu()->setActiveItemId('importstrava');
-$this->pageBreadcrumbs()->setLayout('beheer');
-$this->pageBreadcrumbs()->setItems([
-    'Beheer' => $this->url('beheer'),
-    'Strava Log' => $this->url('stravalog'),
-]);
-?>
-<!-- Page Header -->
-<div class="row">
-    <h1 class="col">STRAVA LOG</h1>
-</div>
-<!-- Breadcrumbs -->
-<div class="row">
-    <div class="col">
-        <?= $this->pageBreadcrumbs()->render(); ?>
-    </div>
-</div>
-<div class="row">
-    <div class="col">
-        <table class="table table-dark table-sm table-bordered table-hover table-striped">
-            <thead class="thead-dark">
-            <tr>
-                <th>#</th>
-                <th>Import date</th>
-                <th>Total imports</th>
-                <th class="text-center"><i class="fas fa-cogs"></i></th>
-            </tr>
-            </thead>
-            <tbody>
-            <?php $totalImports = 0; ?>
-            <?php foreach ($items AS $index => $item) { ?>
-                <?php $nr = $index + 1; ?>
-                <tr id="importLogItem<?= $item->getId(); ?>">
-                    <td><?= $nr; ?></td>
-                    <td><?= $item->getImportDate()->format('Y-m-d H:i:s'); ?></td>
-                    <th><?= $totalActivities = count($item->getActivities()) ?></th>
-                    <td class="text-center">
-                        <?php if ($index === 0) { ?>
-                            <button type="button" data-importid="<?= $item->getId() ?>"
-                                    class="btn btn-sm btn-danger removeImport" data-toggle="modal"
-                                    data-target="#confirmationModal">
-                                <i class="fas fa-undo"></i>
-                            </button>
-                        <?php } ?>
-                    </td>
-                </tr>
-                <?php $totalImports = $totalImports + $totalActivities; ?>
+<div class="container-fluid pt-4 px-4">
+    <div class="row g-4">
+        <div class="col-sm-12 col-md-12 col-xl-12">
+            <div class="bg-secondary rounded  p-4">
+                <div class="row g-4">
+                    <h2 class="col-sm-12 col-md-12 col-xl-12 mb-4 text-primary">Strava log</h2>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th scop="col">#</th>
+                                <th scop="col">Import date</th>
+                                <th scop="col">Total imports</th>
+                                <th scop="col" class="text-center"><i class="fas fa-cogs"></i></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <?php $totalImports = 0; ?>
+                            <?php foreach ($items as $index => $item) { ?>
+                                <?php $nr = $index + 1; ?>
+                                <tr id="importLogItem<?= $item->getId(); ?>">
+                                    <td><?= $nr; ?></td>
+                                    <td><?= $item->getImportDate()->format('Y-m-d H:i:s'); ?></td>
+                                    <th><?= $totalActivities = count($item->getActivities()) ?></th>
+                                    <td class="text-center">
+                                        <?php if ($index === 0) { ?>
+                                            <button type="button" data-importid="<?= $item->getId() ?>"
+                                                    class="btn btn-sm btn-danger removeImport" data-toggle="modal"
+                                                    data-target="#confirmationModal">
+                                                <i class="fas fa-undo"></i>
+                                            </button>
+                                        <?php } ?>
+                                    </td>
+                                </tr>
+                                <?php $totalImports = $totalImports + $totalActivities; ?>
 
-            <?php } ?>
-            <tr>
-                <th colspan="2" class="text-right">Totaal</th>
-                <th colspan="2"><?= $totalImports ?></th>
-            </tr>
-            </tbody>
-        </table>
+                            <?php } ?>
+                            <tr>
+                                <th scope="col" colspan="2" class="text-right">Totaal</th>
+                                <th scope="col" colspan="2"><?= $totalImports ?></th>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 <!-- Confirmation Modal -->
@@ -86,34 +79,37 @@ $this->pageBreadcrumbs()->setItems([
 <!-- End Confirmation Modal -->
 
 <script>
-    $('button.removeImport').click(function () {
-        var importId = $(this).data('importid');
-        $('button#removeLog').data('removelogid', importId);
-    });
+    $(document).ready(function () {
+        $('button.removeImport').click(function () {
+            var importId = $(this).data('importid');
+            $('button#removeLog').data('removelogid', importId);
+        });
 
-    $('button#removeLog').click(function () {
-        var removelogId = $(this).data('removelogid');
+        $('button#removeLog').click(function () {
+            var removelogId = $(this).data('removelogid');
 
-        if (removelogId != '') {
-            $.ajax({
-                type: 'POST',
-                data: {
-                    removelogId: removelogId
-                },
-                url: "<?= $this->url('beheer/stravalog', ['action' => 'removeImport']); ?>",
-                async: true,
-                success: function (data) {
-                    if (data.success === true) {
-                        $('#confirmationModal').modal('hide')
-                        $('tr#importLogItem' + data.removelogId).slideUp( "slow", function() {
-                            // Animation complete.
-                        });
-                    } else {
-                        alert(data.errorMessage);
+            if (removelogId != '') {
+                $.ajax({
+                    type: 'POST',
+                    data: {
+                        removelogId: removelogId
+                    },
+                    url: "<?= $this->url('beheer/stravalog', ['action' => 'removeImport']); ?>",
+                    async: true,
+                    success: function (data) {
+                        if (data.success === true) {
+                            $('#confirmationModal').modal('hide')
+                            $('tr#importLogItem' + data.removelogId).slideUp("slow", function () {
+                                // Animation complete.
+                            });
+                        } else {
+                            alert(data.errorMessage);
+                        }
                     }
-                }
-            });
-        }
+                });
+            }
+        });
+
     });
 
 </script>

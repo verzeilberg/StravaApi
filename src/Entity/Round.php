@@ -118,6 +118,11 @@ class Round extends UnityOfWork {
      */
     private $activity;
 
+    public function __construct()
+    {
+    }
+
+
     /**
      * @return int
      */

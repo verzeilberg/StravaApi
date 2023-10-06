@@ -3,6 +3,9 @@
 namespace StravaApi\View\Helper;
 
 use Laminas\View\Helper\AbstractHelper;
+use Symfony\Component\VarDumper\VarDumper;
+use function round;
+use function str_replace;
 
 // This view helper class translate text
 class StravaApiHelper extends AbstractHelper
@@ -73,7 +76,10 @@ class StravaApiHelper extends AbstractHelper
             return 0;
         }
 
-        return gmdate("H:i:s",round(1000/$averageSpeed));
+        $result = 1000/$averageSpeed;
+        $result = str_replace('.', '', $result);
+
+        return gmdate("H:i:s",$result);
     }
 
     /**
@@ -82,7 +88,9 @@ class StravaApiHelper extends AbstractHelper
      */
     public function getAverageSpeedForChart($averageSpeed)
     {
-        return ltrim(gmdate("i.s",1000/$averageSpeed), 0);
+        $result = 1000/$averageSpeed;
+        $result = str_replace('.', '', $result);
+        return ltrim(gmdate("i.s", $result), 0);
     }
 
     /**

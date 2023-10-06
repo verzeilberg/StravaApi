@@ -5,6 +5,7 @@ namespace StravaApi\Service;
 use Doctrine\ORM\OptimisticLockException;
 use Exception;
 use StravaApi\Entity\Activity;
+use Symfony\Component\VarDumper\VarDumper;
 use User\View\Helper\CurrentUser;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as DoctrineAdapter;
@@ -18,6 +19,7 @@ use Polyline;
 use StravaApi\Repository\ActivityRepository;
 use StravaApi\Repository\RoundRepository;
 use StravaApi\Repository\ActivityImportLogRepository;
+use function str_replace;
 
 class StravaService
 {
@@ -671,7 +673,9 @@ class StravaService
         $activity->setEndLng($activityArr->end_latlng[1]);
         $activity->setSummaryPolyline($activityArr->map->polyline);
         $activity->setAverageSpeed($activityArr->average_speed);
-        $averageSpeedTime = gmdate("H:i:s",1000/$activityArr->average_speed);
+        $result = 1000/$activityArr->average_speed;
+        $result = str_replace('.', '', $result);
+        $averageSpeedTime = gmdate("H:i:s",$result);
         $averageSpeedTime = new \DateTime($averageSpeedTime);
         $activity->setAverageSpeedTime($averageSpeedTime);
         $activity->setMaxSpeed($activityArr->max_speed);
