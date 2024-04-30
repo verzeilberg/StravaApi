@@ -60,7 +60,7 @@ class StravaApiHelper extends AbstractHelper
      * @param $totalElevationGain
      * @return string
      */
-    public function getTotalElevationGain($totalElevationGain)
+    public function getTotalElevationGain($totalElevationGain): string
     {
         return number_format($totalElevationGain, 0, ',', '');
     }
@@ -68,24 +68,25 @@ class StravaApiHelper extends AbstractHelper
     /**
      * Get average speed in hours, minutes and seconds
      * @param $averageSpeed
-     * @return false|string
+     * @return bool|int|string
      */
-    public function getAverageSpeed($averageSpeed)
+    public function getAverageSpeed($averageSpeed): bool|int|string
     {
-        if ($averageSpeed === 0)
-        {
+        if ($averageSpeed > 0) {
+
+            $result = 1000 / (int)$averageSpeed;
+
+            return gmdate("H:i:s", (int)$result);
+        } else {
             return 0;
         }
-
-        $result = 1000/$averageSpeed;
-        return gmdate("H:i:s",(int) $result);
     }
 
     /**
      * @param $averageSpeed
      * @return string
      */
-    public function getAverageSpeedForChart($averageSpeed)
+    public function getAverageSpeedForChart($averageSpeed): string
     {
         $result = 1000/$averageSpeed;
         return ltrim(gmdate("i.s", (int) $result), 0);
@@ -94,12 +95,12 @@ class StravaApiHelper extends AbstractHelper
     /**
      * Get heartbeat
      *
-     * @param $hearthBeath
+     * @param $hearthBeat
      * @return string
      */
-    public function getHeartbeath($hearthBeath)
+    public function getHeartbeath($hearthBeat): string
     {
-        return number_format($hearthBeath, 0, ',', '');
+        return number_format($hearthBeat, 0, ',', '');
     }
 
 }

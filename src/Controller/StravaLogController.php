@@ -43,6 +43,7 @@ class StravaLogController extends AbstractActionController
 
         // Set alternative layout
         $this->layout()->setTemplate('layout/beheer');
+        $this->vhm->get('headScript')->appendFile('/js/strava-log.js');
 
         // Return the response
         return $response;
@@ -60,7 +61,7 @@ class StravaLogController extends AbstractActionController
             'items' => $items
         ];
     }
-    
+
     /*
      * Remove import action
      */
@@ -82,7 +83,7 @@ class StravaLogController extends AbstractActionController
                 'success' => $success,
                 'removelogId' => $logId
             ]);
-            
+
         }
         //Get import log
         $importLog = $this->stravaService->activityImportLogRepository->findOneBy(['id' => $logId]);

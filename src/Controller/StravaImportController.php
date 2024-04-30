@@ -118,6 +118,7 @@ class StravaImportController extends AbstractActionController
         //Create a unix date from the date and time of last import log
         $importUnixDate = (is_object($importLog) && is_object($importLog->getImportDate()) ? $importLog->getImportDate()->format('U') : null);
         //Get all activities after given unix date
+
         $activities = $this->stravaService->getAllActivities($accesToken, null, $importUnixDate);
 
         //Return view
