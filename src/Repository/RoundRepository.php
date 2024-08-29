@@ -14,7 +14,7 @@ class RoundRepository extends EntityRepository
      *
      * @return Round
      */
-    public function getFastestRound($type = null, int $workoutType = 1): Round
+    public function getFastestRound($type = null, int $workoutType = 1): ? Round
     {
         $qb = $this->createQueryBuilder('r');
         $qb->leftJoin('r.activity', 'a');
